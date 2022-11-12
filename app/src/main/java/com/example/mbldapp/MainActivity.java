@@ -20,4 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    public void onbtnStatisticsClicked(View view) {
+        Intent intent = new Intent(this,Statistics.class);
+        startActivity(intent);
+    }
 }
