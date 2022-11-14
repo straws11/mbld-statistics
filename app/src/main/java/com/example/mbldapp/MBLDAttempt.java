@@ -25,11 +25,16 @@ public class MBLDAttempt { //inner class. MultiBlind contains MBlDAttempt
         return this.solved - (this.attempted - this.solved);
     }
 
+    public String getDate() {
+        return this.date;
+    }
+
     @Override
     public String toString() {
-        int hours = phase1Time / 3600;
-        int mins = (phase1Time % 3600) / 60;
-        int secs = phase1Time % 60;
+        int totalTime = phase1Time + phase2Time;
+        int hours = totalTime / 3600;
+        int mins = (totalTime % 3600) / 60;
+        int secs = totalTime % 60;
         String time = String.format(Locale.getDefault(), "%d:%02d:%02d", hours,
                 mins, secs);
         return solved + "/" + attempted + " in " + time;

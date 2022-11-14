@@ -2,25 +2,25 @@ package com.example.mbldapp;
 
 import java.util.ArrayList;
 
-public class AttemptListItem {
+public class AttemptListItem {//this class is purely for each item that'll be listed
 
     private String result;
-    private int score;
+    private String date;
 
 
-    public AttemptListItem(String pResult, int pScore) {
+    public AttemptListItem(String pResult, String pDate) {
         //constructor
         result = pResult;
-        score = pScore;
+        date = pDate;
     }
 
-    public int getScore() {
-        return score;
-    }
 
     public String getResult() {
         return result;
     }
 
+    public String getDate() {
+        return date;
+    }
 
 }

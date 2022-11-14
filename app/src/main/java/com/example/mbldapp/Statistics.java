@@ -31,8 +31,11 @@ public class Statistics extends AppCompatActivity {
         attempts = readAttempts();
         int attemptsSize = attempts.size();
         if (attempts != null) {
-            for (int i = 0; i < attemptsSize; i++) {
-                formattedAttempts.add(new AttemptListItem(attempts.get(i).toString(), attempts.get(i).getScore()));
+            for (int i = 0; i < attemptsSize; i++) {//iterate through each mbld attempt and create a formatted ListItem
+                //content of each itme
+                String result = attempts.get(i).toString();
+                String date = attempts.get(i).getDate();
+                formattedAttempts.add(new AttemptListItem(result, date));
             }
             // Create adapter passing in the sample user data
             AttemptItemAdapter adapter = new AttemptItemAdapter(formattedAttempts);

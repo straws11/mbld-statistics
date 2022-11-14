@@ -42,7 +42,7 @@ public class AttemptItemAdapter extends
         TextView textResultView = holder.resultTextView;
         textResultView.setText(String.valueOf(attemptListItem.getResult()));
         TextView textScoreView = holder.scoreTextView;
-        textScoreView.setText(String.valueOf(attemptListItem.getScore()));
+        textScoreView.setText(String.valueOf(attemptListItem.getDate()));
     }
 
     // Returns the total count of items in the list

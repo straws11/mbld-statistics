@@ -96,18 +96,18 @@ public class Attempting extends AppCompatActivity {
             runPhase++;
             btnStart.setText("Stop");//TODO change text when multiphase is enabled so it says End Memo or smth
             phase1 = totalSeconds;//get current time as memo time
+
         } else {//in exec aka runPhase = 3, now stop
             handler.removeCallbacks(runnable);//stops the infinite runnable loop
             phase2 = totalSeconds-phase1;//get exec time
             runPhase=1;//resets var
             btnStart.setVisibility(View.GONE);
+            btnStart.setText("Start");
             tvTimer.setVisibility(View.GONE);
             btnNewAttempt.setVisibility(View.VISIBLE);
             edtAmountSolved.setVisibility(View.VISIBLE);
             tvAmountSolved.setVisibility(View.VISIBLE);
-
         }
-
     }
 
     public void onbtnNextAttemptClicked(View view) {
@@ -122,6 +122,10 @@ public class Attempting extends AppCompatActivity {
         //create mbld object
         solved = Integer.parseInt(edtAmountSolved.getText().toString());
         MBLDAttempt mbldAttempt = new MBLDAttempt(solved,attempted,phase1,phase2);
+        //Resetting vars
+        phase1 = 0;
+        phase2 = 0;
+        totalSeconds = 0;
         //debug display points Toast.makeText(this,Integer.toString(mbldAttempt.getScore()),Toast.LENGTH_SHORT).show();
         //SAVING
         saveAttempt(mbldAttempt);
