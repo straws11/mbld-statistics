@@ -22,14 +22,12 @@ public class AttemptListItem {
         return result;
     }
 
-    private static int randomtestId = 0;
 
     public static ArrayList<AttemptListItem> createAttemptList(int numAttempts) {
         ArrayList<AttemptListItem> attempts = new ArrayList<>();
 
-        for (int i = 1; i <= numAttempts; i++) {
-            attempts.add(new AttemptListItem("Person " + ++randomtestId, i*10));
-        }
+
+
         return attempts;
     }
 }

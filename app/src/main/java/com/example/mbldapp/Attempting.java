@@ -140,15 +140,12 @@ public class Attempting extends AppCompatActivity {
     public void saveAttempt(MBLDAttempt mbldAttempt) {
         // Convert JSON File to Java Object
         Reader reader = null;
-        List<MBLDAttempt> attempts;
-        try {
-            reader = new FileReader(getApplicationContext().getFilesDir()+"/attempts.json");
-            Type attemptsListType = new TypeToken<ArrayList<MBLDAttempt>>(){}.getType();
-            attempts = new Gson().fromJson(reader,attemptsListType);
-        } catch (FileNotFoundException e) {//file not found, just declare array empty
-            e.printStackTrace();
+        List<MBLDAttempt> attempts = readAttempts();
+
+        if (attempts==null) {//no attempts exist
             attempts = new ArrayList<>();
         }
+
         //add new attempt
         attempts.add(mbldAttempt);
 
@@ -164,6 +161,22 @@ public class Attempting extends AppCompatActivity {
             e.printStackTrace();
         }
     }//end of save method
+
+    public ArrayList<MBLDAttempt> readAttempts() {
+        ArrayList<MBLDAttempt> attempts = new ArrayList<>();
+        Reader reader = null;
+        //reads all attempts from the json file
+        try {
+            reader = new FileReader(getApplicationContext().getFilesDir()+"/attempts.json");
+            Type attemptsListType = new TypeToken<ArrayList<MBLDAttempt>>(){}.getType();
+            attempts = new Gson().fromJson(reader,attemptsListType);
+        } catch (FileNotFoundException e) {//if not found
+            e.printStackTrace();
+            return null;//didn't find it
+        }
+        return attempts;
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
