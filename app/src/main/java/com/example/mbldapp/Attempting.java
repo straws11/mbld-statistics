@@ -49,8 +49,8 @@ public class Attempting extends AppCompatActivity {
     TextView tvTimer;
     TextView tvResultDisplay;
     TextView tvAmountSolved;
-    boolean running = false;
-    int seconds = 0;
+    int runPhase = 1; //1 not started/finished/stopped, 2 in memo, 3 in exec
+    int phase1, phase2, totalSeconds = 0;
     int solved;
     int attempted;
 
@@ -86,25 +86,26 @@ public class Attempting extends AppCompatActivity {
     }
 
     public void onbtnStartClicked(View view) {
-        if (running) { //attempt finished
-            running = false;
+        if (runPhase==1) { //attempt inactive, now go into memo
+            //start running
+            runPhase++;//now in memo
+            handler.postDelayed(runnable,1000);//starts the worker? thread, it will loop within itself now
+            btnStart.setText("Split");
 
-            btnStart.setText("Start Attempt");
+        } else if (runPhase==2) {//in memo, now go into exec
+            runPhase++;
+            btnStart.setText("Stop");//TODO change text when multiphase is enabled so it says End Memo or smth
+            phase1 = totalSeconds;//get current time as memo time
+        } else {//in exec aka runPhase = 3, now stop
+            handler.removeCallbacks(runnable);//stops the infinite runnable loop
+            phase2 = totalSeconds-phase1;//get exec time
+            runPhase=1;//resets var
             btnStart.setVisibility(View.GONE);
             tvTimer.setVisibility(View.GONE);
             btnNewAttempt.setVisibility(View.VISIBLE);
             edtAmountSolved.setVisibility(View.VISIBLE);
             tvAmountSolved.setVisibility(View.VISIBLE);
-            handler.removeCallbacks(runnable);//stops the infinite runnable loop
-            //ATTEMPT NOW OVER
 
-
-        } else {//now starting new attempt
-            seconds = 0;
-            running = true;
-            btnStart.setText("Stop Attempt");//TODO change text when multiphase is enabled so it says End Memo or smth
-            tvTimer.setText("0");
-            handler.postDelayed(runnable,1000);//starts the worker? thread, it will loop within itself now
         }
 
     }
@@ -120,7 +121,7 @@ public class Attempting extends AppCompatActivity {
         //save attempt
         //create mbld object
         solved = Integer.parseInt(edtAmountSolved.getText().toString());
-        MBLDAttempt mbldAttempt = new MBLDAttempt(solved,attempted,seconds);
+        MBLDAttempt mbldAttempt = new MBLDAttempt(solved,attempted,phase1,phase2);
         //debug display points Toast.makeText(this,Integer.toString(mbldAttempt.getScore()),Toast.LENGTH_SHORT).show();
         //SAVING
         saveAttempt(mbldAttempt);
@@ -207,8 +208,8 @@ public class Attempting extends AppCompatActivity {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            seconds++;
-            String time = encodeTime(seconds);
+            totalSeconds++;
+            String time = encodeTime(totalSeconds);
             tvTimer.setText(time);
             handler.postDelayed(this, 1000);//calls itself, ie the loop that keeps updating timer is called within itself
         }//end of public void
@@ -237,7 +238,7 @@ public class Attempting extends AppCompatActivity {
         builder.show();
     }
 
-    public String encodeTime(int seconds) {//i like functions hehe
+    public String encodeTime(int seconds) {
         int hours = seconds / 3600;
         int mins = (seconds % 3600) / 60;
         int secs = seconds % 60;

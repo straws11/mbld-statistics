@@ -1,29 +1,28 @@
 package com.example.mbldapp;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class MBLDAttempt { //inner class. MultiBlind contains MBlDAttempt
     private int solved;
     private int attempted;
-    private int score;
     private int phase1Time;
     private int phase2Time;
+    private String date;
 
-    MBLDAttempt(int solved, int attempted, int phase1Time) {//constructor for attempts without multiphase
+    //constructor
+    MBLDAttempt(int solved, int attempted, int phase1Time, int phase2Time) {//for attempts with multiphase
         this.solved = solved;
         this.attempted = attempted;
         this.phase1Time = phase1Time;
-        this.phase2Time = 0;
-        this.score = this.solved - (this.attempted - this.solved);
-    }
-
-    MBLDAttempt(int solved, int attempted, int phase1Time, int phase2Time) {//for attempts with multiphase
-        //do nothing for now
+        this.phase2Time = phase2Time;
+        this.date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
     }
 
     public int getScore() {
-        return score;
+        return this.solved - (this.attempted - this.solved);
     }
 
     @Override
