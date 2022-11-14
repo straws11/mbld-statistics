@@ -23,11 +23,4 @@ public class AttemptListItem {
     }
 
 
-    public static ArrayList<AttemptListItem> createAttemptList(int numAttempts) {
-        ArrayList<AttemptListItem> attempts = new ArrayList<>();
-
-
-
-        return attempts;
-    }
 }

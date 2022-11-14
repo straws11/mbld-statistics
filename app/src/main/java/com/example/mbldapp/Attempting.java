@@ -142,7 +142,7 @@ public class Attempting extends AppCompatActivity {
         Reader reader = null;
         List<MBLDAttempt> attempts = readAttempts();
 
-        if (attempts==null) {//no attempts exist
+        if (attempts==null) {//no attempts exist create empty array
             attempts = new ArrayList<>();
         }
 
