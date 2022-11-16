@@ -29,8 +29,8 @@ public class Statistics extends AppCompatActivity {
 
         //initialize attempts
         attempts = readAttempts();
-        int attemptsSize = attempts.size();
         if (attempts != null) {
+            int attemptsSize = attempts.size();
             for (int i = 0; i < attemptsSize; i++) {//iterate through each mbld attempt and create a formatted ListItem
                 //content of each itme
                 String result = attempts.get(i).toString();

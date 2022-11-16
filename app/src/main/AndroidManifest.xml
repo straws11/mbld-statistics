@@ -18,6 +18,9 @@
         android:theme="@style/Theme.MBLDApp"
         tools:targetApi="31">
         <activity
+            android:name=".MainApp"
+            android:exported="false" />
+        <activity
             android:name=".Statistics"
             android:exported="false" />
         <activity
