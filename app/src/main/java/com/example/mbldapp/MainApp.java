@@ -1,7 +1,6 @@
 package com.example.mbldapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
@@ -28,7 +27,7 @@ public class MainApp extends AppCompatActivity {
 
         //add fragments
         viewPagerAdapter.add(new AttemptingFragment(),"Attempt");
-        viewPagerAdapter.add(new AttemptListFragment(),"All Attempts");
+        viewPagerAdapter.add(new StatisticsFragment(),"All Attempts");
 
         //set adapter
         viewPager.setAdapter(viewPagerAdapter);
