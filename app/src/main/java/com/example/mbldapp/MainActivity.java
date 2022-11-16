@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
     public void onDoAttemptBtnClicked(View view) {
         Intent intent = new Intent(this,Attempting.class);
         startActivity(intent);
-
-
     }
 
     public void onbtnStatisticsClicked(View view) {

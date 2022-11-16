@@ -1,9 +1,13 @@
 package com.example.mbldapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -32,13 +36,12 @@ public class MainApp extends AppCompatActivity {
         //set adapter
         viewPager.setAdapter(viewPagerAdapter);
 
-        // The Page (fragment) titles will be displayed in the
-        // tabLayout hence we need to  set the page viewer
-        // we use the setupWithViewPager().
+        //creating the tabs using an array to get their names
         tabLayout = findViewById(R.id.tab_layout);
         String [] tabTitles = {"Attempt","All Attempts"};
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(tabTitles[position])
                 ).attach();
     }
+
 }

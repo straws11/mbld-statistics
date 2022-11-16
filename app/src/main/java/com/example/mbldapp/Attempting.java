@@ -74,7 +74,7 @@ public class Attempting extends AppCompatActivity {
 
     }
 
-    public void onbtnGenScramblesClicked(View view) {
+ /*   public void onbtnGenScramblesClicked(View view) {
         //hides components that get my scramble count
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 101);
@@ -87,7 +87,7 @@ public class Attempting extends AppCompatActivity {
 
         attempted = Integer.parseInt(edtCubeAmount.getText().toString());
         //TODO:generate and display scrambles
-    }
+    }*/
 
     public void onbtnStartClicked(View view) {
         if (runPhase==1) { //attempt inactive, now go into memo
