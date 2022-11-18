@@ -15,11 +15,12 @@ import java.util.List;
 public class AttemptItemAdapter extends
         RecyclerView.Adapter<AttemptItemAdapter.ViewHolder> {
 
-    private List<AttemptListItem> attempts;
+    private List<MBLDAttempt> attempts;
     private SelectItemListener listener;
 
     //constructor
-    public AttemptItemAdapter(List<AttemptListItem> pAttempts, SelectItemListener pListener) {
+    public AttemptItemAdapter(List<MBLDAttempt> pAttempts, SelectItemListener pListener) {
+
         attempts = pAttempts;
         listener = pListener;
     }
@@ -41,7 +42,7 @@ public class AttemptItemAdapter extends
     @Override
     public void onBindViewHolder(AttemptItemAdapter.ViewHolder holder, int position) {
         // Get the data model based on position
-        AttemptListItem attemptListItem = attempts.get(position);
+        MBLDAttempt mbldAttempt = attempts.get(position);
 
         //set onclick listener for the item
         holder.itemAttempt.setOnClickListener(new View.OnClickListener() {
@@ -53,9 +54,9 @@ public class AttemptItemAdapter extends
 
         // Set item views based on your views and data model
         TextView textResultView = holder.resultTextView;
-        textResultView.setText(String.valueOf(attemptListItem.getResult()));
+        textResultView.setText(String.valueOf(mbldAttempt.toString()));
         TextView textScoreView = holder.scoreTextView;
-        textScoreView.setText(String.valueOf(attemptListItem.getDate()));
+        textScoreView.setText(String.valueOf(mbldAttempt.getDate()));
     }
 
     // Returns the total count of items in the list

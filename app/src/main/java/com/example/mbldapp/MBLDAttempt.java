@@ -21,6 +21,10 @@ public class MBLDAttempt { //inner class. MultiBlind contains MBlDAttempt
         this.date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
     }
 
+    public String getResult() {
+        return this.solved+ "/" + this.attempted;
+    }
+
     public int getScore() {
         return this.solved - (this.attempted - this.solved);
     }

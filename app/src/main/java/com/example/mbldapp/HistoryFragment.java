@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +26,8 @@ import java.util.ArrayList;
 public class HistoryFragment extends Fragment implements SelectItemListener {
 
     private RecyclerView rvAttempts;
-    ArrayList<AttemptListItem> formattedAttempts = new ArrayList<>();
+    Dialog dialog = new Dialog(getActivity());
+   // ArrayList<AttemptListItem> formattedAttempts = new ArrayList<>();
     ArrayList<MBLDAttempt> attempts;
     AttemptItemAdapter adapter;
 
@@ -36,8 +38,28 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.activity_statistics); - handled by onCreateView
+        Button btnDelete = (Button) dialog.findViewById(R.id.btnDialogDelete);
+        Button btnFullInfo = (Button) dialog.findViewById(R.id.btnDialogFullPage);
+
+        btnFullInfo.setOnClickListener(mDialogListener);
+        btnDelete.setOnClickListener(mDialogListener);
     }
+
+    private View.OnClickListener mDialogListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btnDialogDelete:
+                    //delete attempt
+                    break;
+                case R.id.btnDialogFullPage:
+                    //load full page
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,21 +70,20 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
 
         //initialize attempts
         attempts = readAttempts();
-        if (attempts != null) {
+        /*if (attempts != null) {
             int attemptsSize = attempts.size();
             for (int i = 0; i < attemptsSize; i++) {//iterate through each mbld attempt and create a formatted ListItem
                 //content of each item
                 String result = attempts.get(i).toString();
                 String date = attempts.get(i).getDate();
-                formattedAttempts.add(new AttemptListItem(result, date));
-            }
+                attempts.add(new MBLDAttempt());
+            }*/
             // Create adapter passing in the sample user data
-            adapter = new AttemptItemAdapter(formattedAttempts,this);
+            adapter = new AttemptItemAdapter(attempts,this);
             // Attach the adapter to the recyclerview to populate items
             rvAttempts.setAdapter(adapter);
             // Set layout manager to position the items
             rvAttempts.setLayoutManager(new LinearLayoutManager(getActivity()));
-        }
 
         return view;
     }
@@ -83,10 +104,9 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
     }
 
     @Override //this is the implementation of the interface thing created
-    public void onItemClicked(AttemptListItem attItem) {
+    public void onItemClicked(MBLDAttempt mbldAttempt) {
         //what happens when I click an attempt
         //show dialog
-        Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.dialog_item_attempt);
         dialog.show();
         //load info into textviews and such
@@ -94,9 +114,12 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         TextView tvDialogScore = dialog.findViewById(R.id.tvDialogScore);
         TextView tvDialogComment = dialog.findViewById(R.id.tvDialogComment);
 
-        tvDialogResult.setText(attItem.getResult());
-        //tvDialogScore.setText();
+        tvDialogResult.setText(mbldAttempt.getResult());
+        tvDialogScore.setText("Score: " + Integer.toString(mbldAttempt.getScore()));
+        //tvDialogComment.setText(mbldAttempt.TODO);
 
         //Toast.makeText(getActivity(), attItem.getResult(), Toast.LENGTH_SHORT).show();
     }
+
+
 }
