@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:id="@+id/ItemAttempt"
+    android:paddingBottom="10dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="2dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/cardview_light_background"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
     >
+        <android.widget.LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tvResultItem"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/tvResultItem"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
-        android:textSize="25sp" />
+        <TextView
+            android:id="@+id/tvScoreItem"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:textAlignment="textEnd"
+            android:textSize="25sp" />
+        </android.widget.LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/tvScoreItem"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginEnd="10dp"
-        android:layout_weight="1"
-        android:textAlignment="textEnd"
-        android:textSize="25sp" />
 </LinearLayout>

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,7 +20,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements SelectItemListener {
 
     private RecyclerView rvAttempts;
     ArrayList<AttemptListItem> formattedAttempts = new ArrayList<>();
@@ -54,7 +55,7 @@ public class HistoryFragment extends Fragment {
                 formattedAttempts.add(new AttemptListItem(result, date));
             }
             // Create adapter passing in the sample user data
-            adapter = new AttemptItemAdapter(formattedAttempts);
+            adapter = new AttemptItemAdapter(formattedAttempts,this);
             // Attach the adapter to the recyclerview to populate items
             rvAttempts.setAdapter(adapter);
             // Set layout manager to position the items
@@ -77,5 +78,13 @@ public class HistoryFragment extends Fragment {
             return null;//didn't find it
         }
         return attempts;
+    }
+
+    @Override //this is the implementation of the interface thing created
+    public void onItemClicked(AttemptListItem attItem) {
+        //what happens when I click an attempt
+
+
+        //Toast.makeText(getActivity(), attItem.getResult(), Toast.LENGTH_SHORT).show();
     }
 }

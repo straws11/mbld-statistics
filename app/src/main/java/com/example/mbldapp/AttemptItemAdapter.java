@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +16,12 @@ public class AttemptItemAdapter extends
         RecyclerView.Adapter<AttemptItemAdapter.ViewHolder> {
 
     private List<AttemptListItem> attempts;
+    private SelectItemListener listener;
 
-    public AttemptItemAdapter(List<AttemptListItem> pAttempts) {
-        attempts = pAttempts;//constructor
+    //constructor
+    public AttemptItemAdapter(List<AttemptListItem> pAttempts, SelectItemListener pListener) {
+        attempts = pAttempts;
+        listener = pListener;
     }
 
     @Override
@@ -39,6 +43,14 @@ public class AttemptItemAdapter extends
         // Get the data model based on position
         AttemptListItem attemptListItem = attempts.get(position);
 
+        //set onclick listener for the item
+        holder.itemAttempt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               listener.onItemClicked(attempts.get(holder.getAdapterPosition()));//gets position of item being clicked im pretty sure
+            }
+        });
+
         // Set item views based on your views and data model
         TextView textResultView = holder.resultTextView;
         textResultView.setText(String.valueOf(attemptListItem.getResult()));
@@ -57,6 +69,8 @@ public class AttemptItemAdapter extends
         // for any view that will be set as you render a row
         public TextView resultTextView;
         public TextView scoreTextView;
+        public LinearLayout itemAttempt;
+
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -67,6 +81,8 @@ public class AttemptItemAdapter extends
 
             resultTextView = (TextView) itemView.findViewById(R.id.tvResultItem);
             scoreTextView = (TextView) itemView.findViewById(R.id.tvScoreItem);
+            //is the id of the layout of the ListItem
+            itemAttempt = (LinearLayout) itemView.findViewById(R.id.ItemAttempt);
         }
     }
 
