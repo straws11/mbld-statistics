@@ -19,14 +19,14 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class StatisticsFragment extends Fragment {
+public class HistoryFragment extends Fragment {
 
     private RecyclerView rvAttempts;
     ArrayList<AttemptListItem> formattedAttempts = new ArrayList<>();
     ArrayList<MBLDAttempt> attempts;
     AttemptItemAdapter adapter;
 
-    public StatisticsFragment() {
+    public HistoryFragment() {
         // Required empty public constructor
     }
 
@@ -40,7 +40,7 @@ public class StatisticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
         rvAttempts = view.findViewById(R.id.rvAttempts);
 
         //initialize attempts

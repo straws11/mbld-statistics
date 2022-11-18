@@ -21,14 +21,7 @@
             android:name=".MainApp"
             android:exported="false" />
         <activity
-            android:name=".Statistics"
-            android:exported="false" />
-        <activity
-            android:name=".Attempting"
-            android:exported="false"
-            android:label="MultiBlind Attempt" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".HomePage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

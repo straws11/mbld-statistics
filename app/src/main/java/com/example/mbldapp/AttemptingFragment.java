@@ -160,9 +160,9 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                 onbtnNextAttemptClicked(view);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                StatisticsFragment statFrag = (StatisticsFragment) fm.findFragmentById(R.id.StatFragment);
+                HistoryFragment histFrag = (HistoryFragment) fm.findFragmentById(R.id.HistFragment);
 
-                statFrag.adapter.notify();//TODO: this is called when the fragment isn't active or existing or something. check its lifecycle
+                histFrag.adapter.notify();//TODO: this is called when the fragment isn't active or existing or something. check its lifecycle
                 break;
             case R.id.btnStartAttempt:
                 onbtnStartClicked(view);

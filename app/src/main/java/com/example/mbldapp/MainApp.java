@@ -31,14 +31,15 @@ public class MainApp extends AppCompatActivity {
 
         //add fragments
         viewPagerAdapter.add(new AttemptingFragment(),"Attempt");
-        viewPagerAdapter.add(new StatisticsFragment(),"All Attempts");
+        viewPagerAdapter.add(new HistoryFragment(),"History");
+        viewPagerAdapter.add(new GraphFragment(),"Graph");
 
         //set adapter
         viewPager.setAdapter(viewPagerAdapter);
 
         //creating the tabs using an array to get their names
         tabLayout = findViewById(R.id.tab_layout);
-        String [] tabTitles = {"Attempt","All Attempts"};
+        String [] tabTitles = {"Attempt","History","Graph"};
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(tabTitles[position])
                 ).attach();
