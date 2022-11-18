@@ -1,5 +1,6 @@
 package com.example.mbldapp;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -83,7 +85,17 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
     @Override //this is the implementation of the interface thing created
     public void onItemClicked(AttemptListItem attItem) {
         //what happens when I click an attempt
+        //show dialog
+        Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_item_attempt);
+        dialog.show();
+        //load info into textviews and such
+        TextView tvDialogResult = dialog.findViewById(R.id.tvDialogResult);
+        TextView tvDialogScore = dialog.findViewById(R.id.tvDialogScore);
+        TextView tvDialogComment = dialog.findViewById(R.id.tvDialogComment);
 
+        tvDialogResult.setText(attItem.getResult());
+        //tvDialogScore.setText();
 
         //Toast.makeText(getActivity(), attItem.getResult(), Toast.LENGTH_SHORT).show();
     }
