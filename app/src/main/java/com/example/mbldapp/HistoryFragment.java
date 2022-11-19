@@ -26,8 +26,7 @@ import java.util.ArrayList;
 public class HistoryFragment extends Fragment implements SelectItemListener {
 
     private RecyclerView rvAttempts;
-    Dialog dialog = new Dialog(getActivity());
-   // ArrayList<AttemptListItem> formattedAttempts = new ArrayList<>();
+    Dialog dialog;
     ArrayList<MBLDAttempt> attempts;
     AttemptItemAdapter adapter;
 
@@ -67,6 +66,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         rvAttempts = view.findViewById(R.id.rvAttempts);
+        dialog = new Dialog(getActivity());
 
         //initialize attempts
         attempts = readAttempts();
