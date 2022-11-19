@@ -1,6 +1,7 @@
 package com.example.mbldapp;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -28,7 +29,9 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
     private RecyclerView rvAttempts;
     Dialog dialog;
     ArrayList<MBLDAttempt> attempts;
+    MBLDAttempt selMbldAttempt;
     AttemptItemAdapter adapter;
+    Button btnFullInfo, btnDelete;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -37,11 +40,8 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Button btnDelete = (Button) dialog.findViewById(R.id.btnDialogDelete);
-        Button btnFullInfo = (Button) dialog.findViewById(R.id.btnDialogFullPage);
-
-        btnFullInfo.setOnClickListener(mDialogListener);
-        btnDelete.setOnClickListener(mDialogListener);
+        //btnDelete.setOnClickListener(mDialogListener);
+        //btnFullInfo.setOnClickListener(mDialogListener);
     }
 
     private View.OnClickListener mDialogListener = new View.OnClickListener() {
@@ -53,6 +53,9 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
                     break;
                 case R.id.btnDialogFullPage:
                     //load full page
+                    Intent intent = new Intent(getActivity(),AttemptInfo.class);
+                    intent.putExtra("attemptItem",selMbldAttempt);
+                    startActivity(intent);
                     break;
                 default:
                     break;
@@ -67,17 +70,16 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         rvAttempts = view.findViewById(R.id.rvAttempts);
         dialog = new Dialog(getActivity());
+        //find buttons
+        dialog.setContentView(R.layout.dialog_item_attempt);
+        btnDelete = dialog.findViewById(R.id.btnDialogDelete);
+        btnFullInfo = dialog.findViewById(R.id.btnDialogFullPage);
+        //set button onclick listeners
+        btnDelete.setOnClickListener(mDialogListener);
+        btnFullInfo.setOnClickListener(mDialogListener);
 
         //initialize attempts
         attempts = readAttempts();
-        /*if (attempts != null) {
-            int attemptsSize = attempts.size();
-            for (int i = 0; i < attemptsSize; i++) {//iterate through each mbld attempt and create a formatted ListItem
-                //content of each item
-                String result = attempts.get(i).toString();
-                String date = attempts.get(i).getDate();
-                attempts.add(new MBLDAttempt());
-            }*/
             // Create adapter passing in the sample user data
             adapter = new AttemptItemAdapter(attempts,this);
             // Attach the adapter to the recyclerview to populate items
@@ -106,8 +108,9 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
     @Override //this is the implementation of the interface thing created
     public void onItemClicked(MBLDAttempt mbldAttempt) {
         //what happens when I click an attempt
+        //assign global var
+        selMbldAttempt = mbldAttempt;//so i can pass it in the intent
         //show dialog
-        dialog.setContentView(R.layout.dialog_item_attempt);
         dialog.show();
         //load info into textviews and such
         TextView tvDialogResult = dialog.findViewById(R.id.tvDialogResult);
