@@ -12,8 +12,6 @@ public class AttemptInfo extends AppCompatActivity {
     //all components
     TextView tvInfoResult, tvInfoStats;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +29,7 @@ public class AttemptInfo extends AppCompatActivity {
         tvInfoResult = findViewById(R.id.tvInfoResult);
         tvInfoStats = findViewById(R.id.tvInfoStats);
 
+        tvInfoResult.setText(mbldAttempt.getResult());
         String multiLineStats = "Total time: " + mbldAttempt.getTotalTime() +
                 "\nMemo Time: " + mbldAttempt.getPhase1() +
                 "\nExec Time: " + mbldAttempt.getPhase2();

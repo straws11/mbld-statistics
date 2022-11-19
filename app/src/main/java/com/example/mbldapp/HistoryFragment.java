@@ -57,6 +57,10 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
                     intent.putExtra("attemptItem",selMbldAttempt);
                     startActivity(intent);
                     break;
+                case R.id.btnDialogEdit:
+                    //load new dialog, close current
+                    //can edit result, comment?, time?
+                    //close this new one, open the original
                 default:
                     break;
             }

@@ -54,7 +54,7 @@ public class AttemptItemAdapter extends
 
         // Set item views based on your views and data model
         TextView textResultView = holder.resultTextView;
-        textResultView.setText(String.valueOf(mbldAttempt.toString()));
+        textResultView.setText(mbldAttempt.toString());
         TextView textScoreView = holder.scoreTextView;
         textScoreView.setText(String.valueOf(mbldAttempt.getDate()));
     }

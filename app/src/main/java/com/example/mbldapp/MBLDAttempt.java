@@ -46,16 +46,13 @@ public class MBLDAttempt implements Serializable {//implements because it allows
         return encodeTime(this.phase1Time+this.phase2Time);
     }
 
+    public String getComplexTime() {
+        return getTotalTime()+"["+getPhase1()+"]";
+    }
+
     @Override
     public String toString() {
-        int totalTime = phase1Time + phase2Time;
-        int hours = totalTime / 3600;
-        int mins = (totalTime % 3600) / 60;
-        int secs = totalTime % 60;
-        String time = String.format(Locale.getDefault(), "%d:%02d:%02d", hours,
-                mins, secs);
-        return solved + "/" + attempted + " in " + time;
-
+        return solved + "/" + attempted + " in " + getTotalTime();
     }
 
     public String encodeTime(int seconds) {
