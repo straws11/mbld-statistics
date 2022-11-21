@@ -85,7 +85,6 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
 
         //initialize attempts
         attempts = readAttempts();
-        Collections.reverse(attempts);
         // Create adapter passing in the sample user data
         adapter = new AttemptItemAdapter(attempts,this);
         // Attach the adapter to the recyclerview to populate items
@@ -104,6 +103,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
             reader = new FileReader(getActivity().getFilesDir()+"/attempts.json");
             Type attemptsListType = new TypeToken<ArrayList<MBLDAttempt>>(){}.getType();
             attempts = new Gson().fromJson(reader,attemptsListType);
+            Collections.reverse(attempts);
         } catch (FileNotFoundException e) {//if not found
             e.printStackTrace();
             return null;//didn't find it
@@ -135,8 +135,6 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         super.onResume();
         //updates the data source used by adapter
         attempts = readAttempts();
-        //reverses order for practical UX reasons
-        Collections.reverse(attempts);
         //notify update. should maybe use the more specific methods?
         adapter.notifyDataSetChanged();
     }

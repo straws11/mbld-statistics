@@ -44,6 +44,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     private Handler handler = new Handler();
     EditText edtAmountSolved;
     EditText edtCubeAmount;
+    EditText edtComment;
     Button btnGen;
     Button btnStart;
     Button btnNewAttempt;
@@ -78,6 +79,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         tvTimer = view.findViewById(R.id.tvTimer);
         tvResultDisplay = view.findViewById(R.id.tvResult);
         tvAmountSolved = view.findViewById(R.id.tvSolved);
+        edtComment = view.findViewById(R.id.edtComment);
 
         //set onclicklisteners to all buttons so they call the onClick? function that is overriden below
         btnGen.setOnClickListener(this);
@@ -121,6 +123,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             btnStart.setVisibility(View.GONE);
             btnStart.setText("Start");
             tvTimer.setVisibility(View.GONE);
+            edtComment.setVisibility(View.VISIBLE);
             btnNewAttempt.setVisibility(View.VISIBLE);
             edtAmountSolved.setVisibility(View.VISIBLE);
             tvAmountSolved.setVisibility(View.VISIBLE);
@@ -132,13 +135,15 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         btnNewAttempt.setVisibility(View.GONE);
         edtAmountSolved.setVisibility(View.GONE);
         tvAmountSolved.setVisibility(View.GONE);
+        edtComment.setVisibility(View.GONE);
         //show
         btnGen.setVisibility(View.VISIBLE);
         edtCubeAmount.setVisibility(View.VISIBLE);
         //save attempt
         //create mbld object
         solved = Integer.parseInt(edtAmountSolved.getText().toString());
-        MBLDAttempt mbldAttempt = new MBLDAttempt(solved,attempted,phase1,phase2);
+        String comment = edtComment.getText().toString();
+        MBLDAttempt mbldAttempt = new MBLDAttempt(solved,attempted,phase1,phase2,comment);
         //Resetting vars
         phase1 = 0;
         phase2 = 0;

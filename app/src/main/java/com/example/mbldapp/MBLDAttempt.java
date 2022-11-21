@@ -11,15 +11,17 @@ public class MBLDAttempt implements Serializable {//implements because it allows
     private int attempted;
     private int phase1Time;
     private int phase2Time;
-    private String date;
+    private String dateTime;
+    private String comment;
 
     //constructor
-    MBLDAttempt(int solved, int attempted, int phase1Time, int phase2Time) {//for attempts with multiphase
+    MBLDAttempt(int solved, int attempted, int phase1Time, int phase2Time, String comment) {//for attempts with multiphase
         this.solved = solved;
         this.attempted = attempted;
         this.phase1Time = phase1Time;
         this.phase2Time = phase2Time;
-        this.date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        this.dateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault()).format(new Date());//FIX DATE
+        this.comment = comment;
     }
 
     public String getResult() {
@@ -31,7 +33,7 @@ public class MBLDAttempt implements Serializable {//implements because it allows
     }
 
     public String getDate() {
-        return this.date;
+        return this.dateTime;
     }
 
     public String getPhase1() {

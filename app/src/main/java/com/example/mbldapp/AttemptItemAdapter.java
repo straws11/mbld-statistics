@@ -56,13 +56,14 @@ public class AttemptItemAdapter extends
         TextView textResultView = holder.resultTextView;
         textResultView.setText(mbldAttempt.toString());
         TextView textScoreView = holder.scoreTextView;
-        textScoreView.setText(String.valueOf(mbldAttempt.getDate()));
+        textScoreView.setText(String.valueOf(mbldAttempt.getDate()).substring(0,10));
     }
 
     // Returns the total count of items in the list
     @Override
     public int getItemCount() {
-        return attempts.size();
+        try {return attempts.size();}
+        catch (NullPointerException e) {return 0;}
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {//inner class pretty sure
