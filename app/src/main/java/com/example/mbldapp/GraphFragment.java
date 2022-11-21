@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.BarChart;
+
+
 public class GraphFragment extends Fragment {
 
     public GraphFragment() {
@@ -17,6 +20,7 @@ public class GraphFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BarChart myChart;
     }
 
     @Override
