@@ -1,5 +1,7 @@
 package com.example.mbldapp;
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -39,4 +41,5 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public CharSequence getPageTitle(int position) {
         return fragmentTitle.get(position);
     }
+
 }

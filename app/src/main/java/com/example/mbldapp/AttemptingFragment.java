@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
 import android.text.InputType;
@@ -158,11 +159,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.btnNextAttempt:
                 onbtnNextAttemptClicked(view);
-
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                HistoryFragment histFrag = (HistoryFragment) fm.findFragmentById(R.id.HistFragment);
-
-                histFrag.adapter.notify();//TODO: this is called when the fragment isn't active or existing or something. check its lifecycle
                 break;
             case R.id.btnStartAttempt:
                 onbtnStartClicked(view);

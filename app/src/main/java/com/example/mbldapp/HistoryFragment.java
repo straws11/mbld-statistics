@@ -128,5 +128,8 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         //Toast.makeText(getActivity(), attItem.getResult(), Toast.LENGTH_SHORT).show();
     }
 
+    public void refreshAdapter() {
+        adapter.notifyDataSetChanged();
+    }
 
 }
