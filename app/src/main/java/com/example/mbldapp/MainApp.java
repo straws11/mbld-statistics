@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
@@ -51,7 +52,6 @@ public class MainApp extends AppCompatActivity {
                     HistoryFragment histFrag = (HistoryFragment) fm.findFragmentById(R.id.HistFragment);//returns null!!! WHY!!?!?!?!?
                     if (histFrag != null) {
                         Toast.makeText(MainApp.this, "fr", Toast.LENGTH_SHORT).show();
-                        histFrag.refreshAdapter();
                     }
                     System.out.println("Registered callback");
                 }

@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class HistoryFragment extends Fragment implements SelectItemListener {
 
@@ -84,20 +85,20 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
 
         //initialize attempts
         attempts = readAttempts();
-            // Create adapter passing in the sample user data
-            adapter = new AttemptItemAdapter(attempts,this);
-            System.out.println("Adapter now exists");
-            // Attach the adapter to the recyclerview to populate items
-            rvAttempts.setAdapter(adapter);
-            // Set layout manager to position the items
-            rvAttempts.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Collections.reverse(attempts);
+        // Create adapter passing in the sample user data
+        adapter = new AttemptItemAdapter(attempts,this);
+        // Attach the adapter to the recyclerview to populate items
+        rvAttempts.setAdapter(adapter);
+        // Set layout manager to position the items
+        rvAttempts.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
     }
 
-    public ArrayList<MBLDAttempt> readAttempts() {
-        ArrayList<MBLDAttempt> attempts = new ArrayList<>();
-        Reader reader = null;
+    private ArrayList<MBLDAttempt> readAttempts() {
+        ArrayList<MBLDAttempt> attempts;
+        Reader reader;
         //reads all attempts from the json file
         try {
             reader = new FileReader(getActivity().getFilesDir()+"/attempts.json");
@@ -129,7 +130,14 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         //Toast.makeText(getActivity(), attItem.getResult(), Toast.LENGTH_SHORT).show();
     }
 
-    public void refreshAdapter() {
+    @Override
+    public void onResume() {//overridding the onresume of a fragment (which is called when I move to this History tab) and updating the rvAttempts
+        super.onResume();
+        //updates the data source used by adapter
+        attempts = readAttempts();
+        //reverses order for practical UX reasons
+        Collections.reverse(attempts);
+        //notify update. should maybe use the more specific methods?
         adapter.notifyDataSetChanged();
     }
 
