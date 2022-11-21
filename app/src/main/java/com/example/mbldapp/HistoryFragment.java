@@ -86,6 +86,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         attempts = readAttempts();
             // Create adapter passing in the sample user data
             adapter = new AttemptItemAdapter(attempts,this);
+            System.out.println("Adapter now exists");
             // Attach the adapter to the recyclerview to populate items
             rvAttempts.setAdapter(adapter);
             // Set layout manager to position the items

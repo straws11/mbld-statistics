@@ -30,20 +30,6 @@ public class MainApp extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         viewPager = findViewById(R.id.viewpager);
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                if (position == 1) {//if History tab selected then update the attempt list
-                    FragmentManager fm = getSupportFragmentManager();
-                    HistoryFragment histFrag = (HistoryFragment) fm.findFragmentById(R.id.HistFragment);
-                    if (histFrag == null) {
-                        Toast.makeText(MainApp.this, "fr", Toast.LENGTH_SHORT).show();
-                    }
-                    //histFrag.refreshAdapter();
-                }
-            }
-        });
 
         //setting up adapter
         viewPagerAdapter = new ViewPagerAdapter(this);
@@ -55,6 +41,22 @@ public class MainApp extends AppCompatActivity {
 
         //set adapter
         viewPager.setAdapter(viewPagerAdapter);
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (position == 1) {//if History tab selected then update the attempt list
+                    FragmentManager fm = getSupportFragmentManager();
+                    HistoryFragment histFrag = (HistoryFragment) fm.findFragmentById(R.id.HistFragment);//returns null!!! WHY!!?!?!?!?
+                    if (histFrag != null) {
+                        Toast.makeText(MainApp.this, "fr", Toast.LENGTH_SHORT).show();
+                        histFrag.refreshAdapter();
+                    }
+                    System.out.println("Registered callback");
+                }
+            }
+        });
 
         //creating the tabs using an array to get their names
         tabLayout = findViewById(R.id.tab_layout);

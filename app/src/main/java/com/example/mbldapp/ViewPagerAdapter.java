@@ -42,4 +42,5 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         return fragmentTitle.get(position);
     }
 
+
 }
