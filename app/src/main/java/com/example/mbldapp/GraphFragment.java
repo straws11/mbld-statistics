@@ -66,18 +66,23 @@ public class GraphFragment extends Fragment {
     private void plotLineChart(ArrayList<MBLDAttempt> dataSource) {
         //plot stuff, taking params either passed by onCreateView or from being called using another frag/activity
         List<Entry> entries = new ArrayList<Entry>();
-        System.out.println(dataSource.get(1).getDateDuration());
         for (int i = 0; i < dataSource.size(); i++)
-            entries.add(new Entry(dataSource.get(i).getDateDuration(), dataSource.get(i).getPoints()));
-        System.out.println(entries);
+            entries.add(new Entry(i,dataSource.get(i).getPoints()));
+            //entries.add(new Entry(dataSource.get(i).getDateDuration(), dataSource.get(i).getPoints()));//old for loop
+        //System.out.println(entries);
         //creating a dataset with a label, can have multiple of these datasets to plot over same graph
         LineDataSet lineDataSet = new LineDataSet(entries,"Score");
-        System.out.println("yo");
-        //lineDataSet.setColor(-16777216);
+        //System.out.println("yo");
+        lineDataSet.setColor(-16777216);//this is black ? haha
         //this is the total data collection to pass to the chart
         LineData lineData = new LineData(lineDataSet);
         //passing and refreshing chart
         lineChart.setData(lineData);
         lineChart.invalidate();
+    }
+
+    private ArrayList<MBLDAttempt> extractData(ArrayList<MBLDAttempt> attempts, String criteria) {
+        //not sure what to do with this yet but this could be used to extract all the info I need to plot before passing it to plot()
+        return null;
     }
 }

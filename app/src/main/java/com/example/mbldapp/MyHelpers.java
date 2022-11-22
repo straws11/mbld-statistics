@@ -57,6 +57,7 @@ public class MyHelpers {
                 attempts = helper.readAttempts(context);
             }
 
+
             //add new attempt
             attempts.add(mbldAttempt);
 
