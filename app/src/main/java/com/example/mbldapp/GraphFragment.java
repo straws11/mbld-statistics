@@ -7,21 +7,22 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
 public class GraphFragment extends Fragment {
 
     private ArrayList<MBLDAttempt> attempts;
+    private LineChart lineChart;
 
     public GraphFragment() {
         // Required empty public constructor
@@ -42,12 +43,13 @@ public class GraphFragment extends Fragment {
         attempts = helper.readAttempts(getActivity());
         //BELOW FOLLOWS EXAMPLE CHART
         //init line chart
-        /*LineChart lineChart = (LineChart) view.findViewById(R.id.line_chart);
-        //test data
-        int[][] data = {{10,5},{20,10},{30,5},{40,0}};
+        lineChart = (LineChart) view.findViewById(R.id.line_chart);
+        /*//test data
+        int[][] data = {{10,5},{20,10},{30,-15},{40,0}};
         List<Entry> entries = new ArrayList<Entry>();
         //filling entries with all data points
         for (int i=0; i<4;i++) entries.add(new Entry(data[i][0], data[i][1]));
+        System.out.println(entries);
         //adding to LineDataSet
         LineDataSet dataSet = new LineDataSet(entries,"MyLabel");
         //dataSet.setColor(...);
@@ -56,15 +58,26 @@ public class GraphFragment extends Fragment {
         lineChart.setData(lineData);
         lineChart.invalidate();//refresh*/
 
-
-
+        Collections.reverse(attempts);//readAttempts reverses it for nice display but I need it to be ascending for graph to work
         plotLineChart(attempts);
         return view;
     }
 
     private void plotLineChart(ArrayList<MBLDAttempt> dataSource) {
         //plot stuff, taking params either passed by onCreateView or from being called using another frag/activity
-        dataSource.get(1).getPoints();
-
+        List<Entry> entries = new ArrayList<Entry>();
+        System.out.println(dataSource.get(1).getDateDuration());
+        for (int i = 0; i < dataSource.size(); i++)
+            entries.add(new Entry(dataSource.get(i).getDateDuration(), dataSource.get(i).getPoints()));
+        System.out.println(entries);
+        //creating a dataset with a label, can have multiple of these datasets to plot over same graph
+        LineDataSet lineDataSet = new LineDataSet(entries,"Score");
+        System.out.println("yo");
+        //lineDataSet.setColor(-16777216);
+        //this is the total data collection to pass to the chart
+        LineData lineData = new LineData(lineDataSet);
+        //passing and refreshing chart
+        lineChart.setData(lineData);
+        lineChart.invalidate();
     }
 }

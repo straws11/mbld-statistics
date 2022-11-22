@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,7 +56,7 @@ public class AttemptItemAdapter extends
         TextView textResultView = holder.resultTextView;
         textResultView.setText(mbldAttempt.toString());
         TextView textScoreView = holder.scoreTextView;
-        textScoreView.setText(String.valueOf(mbldAttempt.getDate()).substring(0,10));
+        textScoreView.setText(String.valueOf(mbldAttempt.getDateTime()).substring(0,10));
     }
 
     // Returns the total count of items in the list

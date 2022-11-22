@@ -1,6 +1,7 @@
 package com.example.mbldapp;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,10 +14,7 @@ public class MBLDAttempt implements Serializable {//implements because it allows
     private int phase2Time;
     private String dateTime;
     private String comment;
-    private ArrayList<String> scrambles = new ArrayList<>();
-
-    //helper
-    MyHelpers helper = new MyHelpers();
+    //private ArrayList<String> scrambles = new ArrayList<>();
 
     //constructor
     MBLDAttempt(int solved, int attempted, int phase1Time, int phase2Time, String comment) {//for attempts with multiphase
@@ -24,7 +22,7 @@ public class MBLDAttempt implements Serializable {//implements because it allows
         this.attempted = attempted;
         this.phase1Time = phase1Time;
         this.phase2Time = phase2Time;
-        this.dateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault()).format(new Date());//FIX DATE
+        this.dateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
         this.comment = comment;
     }
 
@@ -37,27 +35,38 @@ public class MBLDAttempt implements Serializable {//implements because it allows
     }
 
     public String getExecPerCube() {
-        return helper.encodeTime(Math.round((float) this.phase2Time / this.attempted));
+        return new MyHelpers().encodeTime(Math.round((float) this.phase2Time / this.attempted));
     }
 
     public String getMemoPerCube() {
-        return helper.encodeTime(Math.round((float) this.phase1Time / this.attempted));
+        return new MyHelpers().encodeTime(Math.round((float) this.phase1Time / this.attempted));
     }
 
-    public String getDate() {
+    public String getDateTime() {
         return this.dateTime;
     }
 
+    public long getDateDuration() {
+        //decode string dateTime into Date object and return the date value in seconds
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        try {
+            return formatter.parse(this.dateTime).getTime()/1000;
+        } catch (ParseException e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     public String getPhase1() {
-        return helper.encodeTime(this.phase1Time);
+        return new MyHelpers().encodeTime(this.phase1Time);
     }
 
     public String getPhase2() {
-        return helper.encodeTime(this.phase2Time);
+        return new MyHelpers().encodeTime(this.phase2Time);
     }
 
     public String getTotalTime() {
-        return helper.encodeTime(this.phase1Time+this.phase2Time);
+        return new MyHelpers().encodeTime(this.phase1Time+this.phase2Time);
     }
 
     public String getComment() {
