@@ -9,4 +9,9 @@
     android:id="@+id/GraphFragment"
     tools:visibility="visible">
 
+    <com.github.mikephil.charting.charts.LineChart
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/line_chart"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

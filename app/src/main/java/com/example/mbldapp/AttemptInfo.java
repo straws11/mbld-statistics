@@ -10,7 +10,7 @@ import android.widget.TextView;
 public class AttemptInfo extends AppCompatActivity {
 
     //all components
-    TextView tvInfoResult, tvInfoStats;
+    TextView tvInfoResult, tvInfoStats, tvInfoComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +28,17 @@ public class AttemptInfo extends AppCompatActivity {
         //loading all the info from the object into views
         tvInfoResult = findViewById(R.id.tvInfoResult);
         tvInfoStats = findViewById(R.id.tvInfoStats);
+        tvInfoComment = findViewById(R.id.tvInfoComment);
 
         tvInfoResult.setText(mbldAttempt.getResult());
         String multiLineStats = "Total time: " + mbldAttempt.getTotalTime() +
                 "\nMemo Time: " + mbldAttempt.getPhase1() +
-                "\nExec Time: " + mbldAttempt.getPhase2();
+                "\nMemo/cube: " + mbldAttempt.getMemoPerCube() +
+                "\nExec Time: " + mbldAttempt.getPhase2() +
+                "\nExec/cube: " + mbldAttempt.getExecPerCube();
 
         tvInfoStats.setText(multiLineStats);
+        tvInfoComment.setText(mbldAttempt.getComment());
 
     }
 }

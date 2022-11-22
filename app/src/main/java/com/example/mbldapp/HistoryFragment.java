@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -27,12 +26,15 @@ import java.util.Collections;
 
 public class HistoryFragment extends Fragment implements SelectItemListener {
 
+    //helper
+    MyHelpers helper = new MyHelpers();
+    //private vars
     private RecyclerView rvAttempts;
-    Dialog dialog;
-    ArrayList<MBLDAttempt> attempts;
-    MBLDAttempt selMbldAttempt;
-    AttemptItemAdapter adapter;
-    Button btnFullInfo, btnDelete;
+    private Dialog dialog;
+    private ArrayList<MBLDAttempt> attempts;
+    private MBLDAttempt selMbldAttempt;
+    private AttemptItemAdapter adapter;
+    private Button btnFullInfo, btnDelete;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -84,7 +86,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         btnFullInfo.setOnClickListener(mDialogListener);
 
         //initialize attempts
-        attempts = readAttempts();
+        attempts = helper.readAttempts(getActivity());
         // Create adapter passing in the sample user data
         adapter = new AttemptItemAdapter(attempts,this);
         // Attach the adapter to the recyclerview to populate items
@@ -93,22 +95,6 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         rvAttempts.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
-    }
-
-    private ArrayList<MBLDAttempt> readAttempts() {
-        ArrayList<MBLDAttempt> attempts;
-        Reader reader;
-        //reads all attempts from the json file
-        try {
-            reader = new FileReader(getActivity().getFilesDir()+"/attempts.json");
-            Type attemptsListType = new TypeToken<ArrayList<MBLDAttempt>>(){}.getType();
-            attempts = new Gson().fromJson(reader,attemptsListType);
-            Collections.reverse(attempts);
-        } catch (FileNotFoundException e) {//if not found
-            e.printStackTrace();
-            return null;//didn't find it
-        }
-        return attempts;
     }
 
     @Override //this is the implementation of the interface thing created
@@ -124,8 +110,8 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         TextView tvDialogComment = dialog.findViewById(R.id.tvDialogComment);
 
         tvDialogResult.setText(mbldAttempt.getResult());
-        tvDialogScore.setText("Score: " + Integer.toString(mbldAttempt.getScore()));
-        //tvDialogComment.setText(mbldAttempt.TODO);
+        tvDialogScore.setText("Score: " + Integer.toString(mbldAttempt.getPoints()));
+        tvDialogComment.setText(mbldAttempt.getComment());
 
         //Toast.makeText(getActivity(), attItem.getResult(), Toast.LENGTH_SHORT).show();
     }
@@ -134,9 +120,13 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
     public void onResume() {//overridding the onresume of a fragment (which is called when I move to this History tab) and updating the rvAttempts
         super.onResume();
         //updates the data source used by adapter
-        attempts = readAttempts();
+        attempts = helper.readAttempts(getActivity());
+        adapter = new AttemptItemAdapter(attempts,this);
+        rvAttempts.setAdapter(adapter);
+        rvAttempts.setLayoutManager(new LinearLayoutManager(getActivity()));
+        System.out.println("onResume");
         //notify update. should maybe use the more specific methods?
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
     }
 
 }

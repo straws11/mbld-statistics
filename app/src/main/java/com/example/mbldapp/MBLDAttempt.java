@@ -2,7 +2,7 @@ package com.example.mbldapp;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -13,6 +13,10 @@ public class MBLDAttempt implements Serializable {//implements because it allows
     private int phase2Time;
     private String dateTime;
     private String comment;
+    private ArrayList<String> scrambles = new ArrayList<>();
+
+    //helper
+    MyHelpers helper = new MyHelpers();
 
     //constructor
     MBLDAttempt(int solved, int attempted, int phase1Time, int phase2Time, String comment) {//for attempts with multiphase
@@ -28,8 +32,16 @@ public class MBLDAttempt implements Serializable {//implements because it allows
         return this.solved+ "/" + this.attempted;
     }
 
-    public int getScore() {
+    public int getPoints() {
         return this.solved - (this.attempted - this.solved);
+    }
+
+    public String getExecPerCube() {
+        return helper.encodeTime(Math.round((float) this.phase2Time / this.attempted));
+    }
+
+    public String getMemoPerCube() {
+        return helper.encodeTime(Math.round((float) this.phase1Time / this.attempted));
     }
 
     public String getDate() {
@@ -37,15 +49,19 @@ public class MBLDAttempt implements Serializable {//implements because it allows
     }
 
     public String getPhase1() {
-        return encodeTime(this.phase1Time);
+        return helper.encodeTime(this.phase1Time);
     }
 
     public String getPhase2() {
-        return encodeTime(this.phase2Time);
+        return helper.encodeTime(this.phase2Time);
     }
 
     public String getTotalTime() {
-        return encodeTime(this.phase1Time+this.phase2Time);
+        return helper.encodeTime(this.phase1Time+this.phase2Time);
+    }
+
+    public String getComment() {
+        return this.comment;
     }
 
     public String getComplexTime() {
@@ -57,14 +73,5 @@ public class MBLDAttempt implements Serializable {//implements because it allows
         return solved + "/" + attempted + " in " + getTotalTime();
     }
 
-    public String encodeTime(int seconds) {
-        int hours = seconds / 3600;
-        int mins = (seconds % 3600) / 60;
-        int secs = seconds % 60;
-        //TODO make format only switch over to mm:ss and hh:mm:ss when it is necessary, not always 00:00:xy
-        String time = String.format(Locale.getDefault(), "%d:%02d:%02d", hours,
-                mins, secs);
-        return time;
-    }
 }
 

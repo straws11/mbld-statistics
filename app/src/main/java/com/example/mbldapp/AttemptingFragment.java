@@ -42,6 +42,7 @@ import java.util.Locale;
 public class AttemptingFragment extends Fragment implements View.OnClickListener {
     //vars
     private Handler handler = new Handler();
+    MyHelpers helper = new MyHelpers();//gives me access to my helper methods like encoding time and saving and reading attempts
     EditText edtAmountSolved;
     EditText edtCubeAmount;
     EditText edtComment;
@@ -150,7 +151,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         totalSeconds = 0;
         //debug display points Toast.makeText(this,Integer.toString(mbldAttempt.getScore()),Toast.LENGTH_SHORT).show();
         //SAVING
-        saveAttempt(mbldAttempt);
+        helper.saveAttempts(getActivity(),mbldAttempt);
     }
 
     //MY FUNCTIONS USED
@@ -181,11 +182,12 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             //Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
         }
     }
-
-    public void saveAttempt(MBLDAttempt mbldAttempt) {
+    //old method, replaced in MyHelpers.java
+   /* public void saveAttempt(MBLDAttempt mbldAttempt) {
         // Convert JSON File to Java Object
         Reader reader = null;
-        List<MBLDAttempt> attempts = readAttempts();
+        MyHelpers helper = new MyHelpers();
+        List<MBLDAttempt> attempts = helper.readAttempts(getActivity());
 
         if (attempts==null) {//no attempts exist create empty array
             attempts = new ArrayList<>();
@@ -208,22 +210,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }//end of save method
-
-    public ArrayList<MBLDAttempt> readAttempts() {
-        ArrayList<MBLDAttempt> attempts = new ArrayList<>();
-        Reader reader = null;
-        //reads all attempts from the json file
-        try {
-            reader = new FileReader(getActivity().getFilesDir()+"/attempts.json");
-            Type attemptsListType = new TypeToken<ArrayList<MBLDAttempt>>(){}.getType();
-            attempts = new Gson().fromJson(reader,attemptsListType);
-        } catch (FileNotFoundException e) {//if not found
-            e.printStackTrace();
-            return null;//didn't find it
-        }
-        return attempts;
-    }
+    }*/
 
 
     @Override
@@ -255,8 +242,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            totalSeconds++;
-            String time = encodeTime(totalSeconds);
+            totalSeconds+=10;//TODO this is for some more accurate timings, it should be ++
+            String time = helper.encodeTime(totalSeconds);
             tvTimer.setText(time);
             handler.postDelayed(this, 1000);//calls itself, ie the loop that keeps updating timer is called within itself
         }//end of public void
@@ -283,15 +270,5 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             }
         });
         builder.show();
-    }
-
-    public String encodeTime(int seconds) {
-        int hours = seconds / 3600;
-        int mins = (seconds % 3600) / 60;
-        int secs = seconds % 60;
-        //TODO make format only switch over to mm:ss and hh:mm:ss when it is necessary, not always 00:00:xy
-        String time = String.format(Locale.getDefault(), "%d:%02d:%02d", hours,
-                mins, secs);
-        return time;
     }
 }
