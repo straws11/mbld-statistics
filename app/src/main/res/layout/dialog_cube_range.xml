@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_cube_range">
+
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="Enter Cube Range"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:id="@+id/tvDialogFrom"
+        android:text="From"
+        android:gravity="center"
+        android:layout_below="@id/tvDialogTitle"
+        android:layout_marginLeft="20dp"
+        />
+
+    <EditText
+        android:layout_width="130dp"
+        android:id="@+id/edtDialogFromRange"
+        android:layout_height="50dp"
+        android:layout_below="@+id/tvDialogTitle"
+        android:layout_toRightOf="@+id/tvDialogFrom"
+        />
+
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:id="@+id/tvDialogTo"
+        android:text="to"
+        android:gravity="center"
+        android:layout_below="@+id/tvDialogTitle"
+        android:layout_toRightOf="@+id/edtDialogFromRange"/>
+
+    <EditText
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/tvDialogTo"
+        android:layout_below="@+id/tvDialogTitle"
+        />
+</RelativeLayout>

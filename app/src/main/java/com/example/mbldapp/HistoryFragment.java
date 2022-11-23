@@ -109,7 +109,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         TextView tvDialogScore = dialog.findViewById(R.id.tvDialogScore);
         TextView tvDialogComment = dialog.findViewById(R.id.tvDialogComment);
 
-        tvDialogResult.setText(mbldAttempt.getResult());
+        tvDialogResult.setText(mbldAttempt.getResult() +"\n"+ mbldAttempt.getComplexTime());
         tvDialogScore.setText("Score: " + Integer.toString(mbldAttempt.getPoints()));
         tvDialogComment.setText(mbldAttempt.getComment());
 
@@ -117,7 +117,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
     }
 
     @Override
-    public void onResume() {//overridding the onresume of a fragment (which is called when I move to this History tab) and updating the rvAttempts
+    public void onResume() {//overriding the onresume of a fragment (which is called when I move to this History tab) and updating the rvAttempts
         super.onResume();
         //updates the data source used by adapter
         attempts = helper.readAttempts(getActivity());

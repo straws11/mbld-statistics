@@ -1,7 +1,14 @@
 package com.example.mbldapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.text.InputType;
+import android.view.LayoutInflater;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +23,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,7 +45,14 @@ public class MyHelpers {
             reader = new FileReader(context.getFilesDir()+"/attempts.json");
             Type attemptsListType = new TypeToken<ArrayList<MBLDAttempt>>(){}.getType();
             attempts = new Gson().fromJson(reader,attemptsListType);
-            Collections.reverse(attempts);
+            //Collections.reverse(attempts);
+            //this sorts the array ascending
+            Collections.sort(attempts, new Comparator<MBLDAttempt>(){
+                public int compare(MBLDAttempt obj1, MBLDAttempt obj2) {
+                    // ## Ascending order
+                    return Long.compare(obj2.getDateDuration(),obj1.getDateDuration());
+                }
+            });
         } catch (FileNotFoundException e) {//if not found
             e.printStackTrace();
             return null;//didn't find it
@@ -57,7 +72,6 @@ public class MyHelpers {
                 attempts = helper.readAttempts(context);
             }
 
-
             //add new attempt
             attempts.add(mbldAttempt);
 
@@ -69,11 +83,39 @@ public class MyHelpers {
                 writer.close();
                 Toast.makeText(context,"Attempt Logged",Toast.LENGTH_LONG).show();
 
-                //update RecyclerView adapter with new data point
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }//end of save method
+        }
+
+    public void showDialog(Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        //setup of my two input fields
+        //final EditText input = new EditText(context);
+        //final EditText input2 = new EditText(context);
+        LayoutInflater inflater = (activity).getLayoutInflater();
+
+        //input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        //input2.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        //builder.setView(input);
+        //builder.setView(input2);
+        builder.setView(inflater.inflate(R.layout.dialog_cube_range,null));
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                //do yes stuff
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+                //do no stuff
+            }
+        });
+        builder.create();
+        builder.show();
+    }
 }

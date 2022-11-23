@@ -18,10 +18,12 @@ public class HomePage extends AppCompatActivity {
         setSupportActionBar(myToolbar);
     }
 
-  /*  public void onbtnTODOClicked(View view) {
-        Intent intent = new Intent(this,Statistics.class);
-        startActivity(intent);
-    } */
+    public void onbtnTODOClicked(View view) {
+        //Intent intent = new Intent(this,Statistics.class);
+        //startActivity(intent);
+        MyHelpers helper = new MyHelpers();
+        helper.showDialog(this);
+    }
 
     public void onbtnEnterApp(View view) {
         Intent intent = new Intent(this,MainApp.class);
