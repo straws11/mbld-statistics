@@ -73,6 +73,10 @@ public class MBLDAttempt implements Serializable {//implements because it allows
         return this.comment;
     }
 
+    public int getAttempted() {
+        return attempted;
+    }
+
     public String getComplexTime() {
         return getTotalTime()+"["+getPhase1()+"]";
     }

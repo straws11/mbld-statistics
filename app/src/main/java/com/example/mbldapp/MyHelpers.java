@@ -87,35 +87,4 @@ public class MyHelpers {
                 e.printStackTrace();
             }
         }
-
-    public void showDialog(Activity activity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        //setup of my two input fields
-        //final EditText input = new EditText(context);
-        //final EditText input2 = new EditText(context);
-        LayoutInflater inflater = (activity).getLayoutInflater();
-
-        //input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        //input2.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-        //builder.setView(input);
-        //builder.setView(input2);
-        builder.setView(inflater.inflate(R.layout.dialog_cube_range,null));
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                //do yes stuff
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-                //do no stuff
-            }
-        });
-        builder.create();
-        builder.show();
-    }
 }
