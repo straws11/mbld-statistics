@@ -28,12 +28,18 @@ import java.util.List;
 import java.util.Locale;
 
 public class MyHelpers {
-    public String encodeTime(int seconds) {//TODO format based on the actual time, dont include HH if not necessary.
+    public String encodeTime(int seconds) {
         int hours = seconds / 3600;
         int mins = (seconds % 3600) / 60;
         int secs = seconds % 60;
-        String time = String.format(Locale.getDefault(), "%d:%02d:%02d", hours,
-                mins, secs);
+        String time;
+        if (seconds>=3600) {
+            time = String.format(Locale.getDefault(),"%d:%02d:%02d",hours,mins,secs);
+        } else if (seconds>=60) {
+            time = String.format(Locale.getDefault(),"%02d:%02d",mins,secs);
+        } else {
+            time = String.format(Locale.getDefault(),"%d",seconds);
+        }
         return time;
     }
 

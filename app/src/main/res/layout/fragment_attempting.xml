@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/AttFragment"
@@ -12,52 +12,46 @@
         android:id="@+id/edtCubeAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:ems="10"
         android:inputType="number"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="25" />
+        android:hint="Amount of cubes" />
 
     <Button
         android:id="@+id/btnGetScrambles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_below="@id/edtCubeAmount"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:text="Generate Scrambles"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtCubeAmount" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/btnStartAttempt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_below="@id/edtCubeAmount"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:text="Start Attempt"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnGetScrambles" />
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tvTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/edtCubeAmount"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="80dp"
         android:text="00:00"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#000000"
         android:textSize="54sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/edtCubeAmount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        tools:visibility="visible" />
+    <!--unused now-->
     <TextView
         android:id="@+id/tvResult"
         android:layout_width="wrap_content"
@@ -69,36 +63,31 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Result" />
+        tools:text="Result"
+        tools:visibility="visible" />
 
     <EditText
         android:id="@+id/edtSolved"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="Amount of solved cubes"
         android:inputType="number"
         android:minHeight="48dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/tvTimer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.855"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvResult"
-        app:layout_constraintVertical_bias="0.533"
-        tools:text="12"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tvSolved"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
         android:text="Amount Solved"
         android:textSize="20sp"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/edtSolved"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/edtSolved"
+        android:layout_above="@id/edtSolved"
         tools:visibility="visible" />
 
     <Button
@@ -107,25 +96,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="Save Attempt"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStartAttempt"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/edtSolved"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible"
         tools:visibility="visible" />
 
     <EditText
         android:id="@+id/edtComment"
-        android:layout_width="227dp"
-        android:layout_height="58dp"
+        android:layout_width="230dp"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
         android:ems="10"
+        android:layout_centerHorizontal="true"
         android:inputType="textPersonName"
-        android:text="Nothing"
+        android:hint="Comment on your attempt"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtSolved" />
+        tools:visibility="visible" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

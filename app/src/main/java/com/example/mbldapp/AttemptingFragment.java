@@ -95,8 +95,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 101);
 
-        edtCubeAmount.setVisibility(View.GONE);
-        btnGen.setVisibility(View.GONE);
+        edtCubeAmount.setVisibility(View.INVISIBLE);
+        btnGen.setVisibility(View.INVISIBLE);
         //show
         btnStart.setVisibility(View.VISIBLE);
         tvTimer.setVisibility(View.VISIBLE);
@@ -121,25 +121,28 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             handler.removeCallbacks(runnable);//stops the infinite runnable loop
             phase2 = totalSeconds-phase1;//get exec time
             runPhase=1;//resets var
-            btnStart.setVisibility(View.GONE);
+            btnStart.setVisibility(View.INVISIBLE);
             btnStart.setText("Start");
-            tvTimer.setVisibility(View.GONE);
+            tvTimer.setVisibility(View.INVISIBLE);
             edtComment.setVisibility(View.VISIBLE);
+            edtComment.setText(null);
             btnNewAttempt.setVisibility(View.VISIBLE);
             edtAmountSolved.setVisibility(View.VISIBLE);
+            edtAmountSolved.setText(null);
             tvAmountSolved.setVisibility(View.VISIBLE);
         }
     }
 
     public void onbtnNextAttemptClicked(View view) {
         //hide
-        btnNewAttempt.setVisibility(View.GONE);
-        edtAmountSolved.setVisibility(View.GONE);
-        tvAmountSolved.setVisibility(View.GONE);
-        edtComment.setVisibility(View.GONE);
+        btnNewAttempt.setVisibility(View.INVISIBLE);
+        edtAmountSolved.setVisibility(View.INVISIBLE);
+        tvAmountSolved.setVisibility(View.INVISIBLE);
+        edtComment.setVisibility(View.INVISIBLE);
         //show
         btnGen.setVisibility(View.VISIBLE);
         edtCubeAmount.setVisibility(View.VISIBLE);
+        edtCubeAmount.setText(null);
         //save attempt
         //create mbld object
         solved = Integer.parseInt(edtAmountSolved.getText().toString());
@@ -242,14 +245,14 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            totalSeconds+=10;//TODO this is for some more accurate timings, it should be ++
+            totalSeconds+=50;//TODO this is for some more accurate timings, it should be ++
             String time = helper.encodeTime(totalSeconds);
             tvTimer.setText(time);
             handler.postDelayed(this, 1000);//calls itself, ie the loop that keeps updating timer is called within itself
         }//end of public void
     }; //end of private runnable variable?
 
-    public void showDialog() {
+  /*  public void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText input = new EditText(getActivity());
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -270,5 +273,5 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             }
         });
         builder.show();
-    }
+    }*/
 }

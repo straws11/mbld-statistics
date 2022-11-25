@@ -53,6 +53,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
             switch (view.getId()) {
                 case R.id.btnDialogDelete:
                     //delete attempt
+                    attempts.remove(selMbldAttempt);
                     break;
                 case R.id.btnDialogFullPage:
                     //load full page
@@ -86,13 +87,19 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         btnFullInfo.setOnClickListener(mDialogListener);
 
         //initialize attempts
-        attempts = helper.readAttempts(getActivity());
-        // Create adapter passing in the sample user data
-        adapter = new AttemptItemAdapter(attempts,this);
-        // Attach the adapter to the recyclerview to populate items
-        rvAttempts.setAdapter(adapter);
-        // Set layout manager to position the items
-        rvAttempts.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        try {
+            attempts = helper.readAttempts(getActivity());
+            // Create adapter passing in the sample user data
+            adapter = new AttemptItemAdapter(attempts,this);
+            // Attach the adapter to the recyclerview to populate items
+            rvAttempts.setAdapter(adapter);
+            // Set layout manager to position the items
+            rvAttempts.setLayoutManager(new LinearLayoutManager(getActivity()));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
 
         return view;
     }

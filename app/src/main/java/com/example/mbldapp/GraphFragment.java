@@ -75,18 +75,23 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
             }
         });
         //get initial data source
-        attempts = helper.readAttempts(getActivity());
+        try {
+            attempts = helper.readAttempts(getActivity());
 
-        //init line and set properties
-        lineChart = (LineChart) view.findViewById(R.id.line_chart);
-        lineChart.getAxisLeft().setEnabled(false);
-        lineChart.getAxisRight().setGranularity(2f);
-        lineChart.getLegend().setEnabled(false);
-        lineChart.getDescription().setPosition(800f,2050f);//fix!
-        lineChart.getDescription().setText("Graph of points for each attempt");
+            //init line and set properties
+            lineChart = (LineChart) view.findViewById(R.id.line_chart);
+            lineChart.getAxisLeft().setEnabled(false);
+            lineChart.getAxisRight().setGranularity(2f);
+            lineChart.getLegend().setEnabled(false);
+            lineChart.getDescription().setPosition(800f,2050f);//fix!
+            lineChart.getDescription().setText("Graph of points for each attempt");
 
-        Collections.reverse(attempts);//readAttempts reverses it for nice display but I need it to be ascending for graph to work
-        plotLineChart(attempts);
+            Collections.reverse(attempts);//readAttempts reverses it for nice display but I need it to be ascending for graph to work
+            plotLineChart(attempts);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
         return view;
     }
 
