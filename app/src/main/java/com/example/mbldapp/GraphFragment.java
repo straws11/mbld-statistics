@@ -11,14 +11,19 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -29,11 +34,14 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class GraphFragment extends Fragment {
+public class GraphFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private ArrayList<MBLDAttempt> attempts;
     private LineChart lineChart;
     private Button btnSetRange;
+    private int startVal = 1;
+    private int endVal = 1000;
+    private String spinnerOption = "All";
 
     public GraphFragment() {
         // Required empty public constructor
@@ -51,14 +59,19 @@ public class GraphFragment extends Fragment {
         MyHelpers helper = new MyHelpers();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
-
+        //spinner
+        Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),R.array.spinOptions,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
         //button init
         btnSetRange = view.findViewById(R.id.btnSetRange);
         //set button onclick listener
         btnSetRange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               showRangeDialog();
+               showRangeDialog(getActivity());
             }
         });
         //get initial data source
@@ -78,24 +91,45 @@ public class GraphFragment extends Fragment {
     }
 
 
-    private void plotLineChart(ArrayList<MBLDAttempt> dataSource) {
-        //plot stuff, taking params either passed by onCreateView or from being called using another frag/activity
-        List<Entry> entries = new ArrayList<Entry>();
-        for (int i = 0; i < dataSource.size(); i++)
-            entries.add(new Entry(i,dataSource.get(i).getPoints()));
-        //System.out.println(entries);
-        //creating a dataset with a label, can have multiple of these datasets to plot over same graph
-        LineDataSet lineDataSet = new LineDataSet(entries,"Points");
-        //System.out.println("yo");
-        lineDataSet.setColor(-16777216);//this is black ? haha
-        //this is the total data collection to pass to the chart
-        LineData lineData = new LineData(lineDataSet);
-        //passing and refreshing chart
-        lineChart.setData(lineData);
+    private void plotLineChart(ArrayList<MBLDAttempt> filteredAttempts) {//lineData includes all LineDataSets (could be 1 or 3 depending on genDataSet options)
+        //ILineDataSet list to contain all LineDataSets to plot
+        List<ILineDataSet> dataSets = new ArrayList<>();
+
+        if (spinnerOption.compareTo("All")==0) {//need to plot all three, so genning the other two we need
+            LineDataSet lineDataSetMemo = genDataSet(filteredAttempts, "Exec");
+            LineDataSet lineDataSetExec = genDataSet(filteredAttempts, "Memo");
+            dataSets.add(lineDataSetExec);
+            dataSets.add(lineDataSetMemo);
+        }
+        LineDataSet lineDataSet = genDataSet(filteredAttempts, spinnerOption);//get main set
+        dataSets.add(lineDataSet);
+        //final thing to plot
+        LineData finalData = new LineData(dataSets);
+        lineChart.setData(finalData);
         lineChart.invalidate();
     }
 
-    private ArrayList<MBLDAttempt> extractData(ArrayList<MBLDAttempt> attempts, int startVal, int endVal) {
+    private LineDataSet genDataSet(ArrayList<MBLDAttempt> dataSource, String option) {//generates the appropriate LineDataSet
+        List<Entry> entries = new ArrayList<>();
+        switch (option) {
+            case "All":
+                for (int i = 0; i < dataSource.size(); i++)
+                    entries.add(new Entry(i, dataSource.get(i).getExecPerCube()+ dataSource.get(i).getMemoPerCube()));
+                break;
+            case "Memo":
+                for (int i =0; i< dataSource.size(); i++)
+                    entries.add(new Entry(i,dataSource.get(i).getMemoPerCube()));
+                break;
+            case "Exec":
+                for (int i =0; i< dataSource.size(); i++)
+                    entries.add(new Entry(i,dataSource.get(i).getExecPerCube()));
+        }
+        LineDataSet lineDataSet = new LineDataSet(entries, option);
+
+        return lineDataSet;
+    }
+
+    private ArrayList<MBLDAttempt> extractData(ArrayList<MBLDAttempt> attempts) {//extract data in appropriate cube attempted range
         ArrayList<MBLDAttempt> filteredAttempts = new ArrayList<>();
         for (int i = 0; i < attempts.size(); i++) {
             int attSize = attempts.get(i).getAttempted();
@@ -107,8 +141,8 @@ public class GraphFragment extends Fragment {
         return filteredAttempts;
     }
 
-    public void showRangeDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    public void showRangeDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         //inflater to create or build the layout from the xml file
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_cube_range,null);//this is crucial for me to get components on this view later!
@@ -122,8 +156,12 @@ public class GraphFragment extends Fragment {
                 //do yes stuff
                 EditText edtFrom = dialogView.findViewById(R.id.edtDialogFromRange);
                 EditText edtTo = dialogView.findViewById(R.id.edtDialogToRange);
-                //filter data source
-                ArrayList<MBLDAttempt> filteredAttempts = extractData(attempts,Integer.parseInt(edtFrom.getText().toString()),Integer.parseInt(edtTo.getText().toString()));//this updates the attempts arraylist, removing all attempts not matching criteria
+                //assign the global vars to whatever user entered into the dialog edits
+                startVal = Integer.parseInt(edtFrom.getText().toString());
+                endVal = Integer.parseInt(edtTo.getText().toString());
+                //get filtered data by creating new arraylist (the original is kept with all attempts to reuse for a new filter later)
+                ArrayList<MBLDAttempt> filteredAttempts = extractData(attempts);
+
                 plotLineChart(filteredAttempts);//plots with the new info
                 //refresh graph
 
@@ -144,5 +182,18 @@ public class GraphFragment extends Fragment {
     public void onResume() {
         super.onResume();
         lineChart.invalidate();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {//select an item in the spinner
+        spinnerOption = adapterView.getItemAtPosition(i).toString();
+        ArrayList<MBLDAttempt> filteredAttempts = extractData(attempts);//TODO make filtered attempts global so I don't have to gen a new one
+        plotLineChart(filteredAttempts);
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

@@ -1,5 +1,7 @@
 package com.example.mbldapp;
 
+import androidx.appcompat.widget.ThemedSpinnerAdapter;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,12 +36,12 @@ public class MBLDAttempt implements Serializable {//implements because it allows
         return this.solved - (this.attempted - this.solved);
     }
 
-    public String getExecPerCube() {
-        return new MyHelpers().encodeTime(Math.round((float) this.phase2Time / this.attempted));
+    public int getExecPerCube() {
+        return Math.round((float) this.phase2Time / this.attempted);
     }
 
-    public String getMemoPerCube() {
-        return new MyHelpers().encodeTime(Math.round((float) this.phase1Time / this.attempted));
+    public int getMemoPerCube() {
+        return Math.round((float) this.phase1Time / this.attempted);
     }
 
     public String getDateTime() {
@@ -57,16 +59,16 @@ public class MBLDAttempt implements Serializable {//implements because it allows
         }
     }
 
-    public String getPhase1() {
-        return new MyHelpers().encodeTime(this.phase1Time);
+    public int getPhase1() {
+        return this.phase1Time;
     }
 
-    public String getPhase2() {
-        return new MyHelpers().encodeTime(this.phase2Time);
+    public int getPhase2() {
+        return this.phase2Time;
     }
 
-    public String getTotalTime() {
-        return new MyHelpers().encodeTime(this.phase1Time+this.phase2Time);
+    public int getTotalTime() {
+        return this.phase1Time+this.phase2Time;
     }
 
     public String getComment() {
@@ -78,12 +80,12 @@ public class MBLDAttempt implements Serializable {//implements because it allows
     }
 
     public String getComplexTime() {
-        return getTotalTime()+"["+getPhase1()+"]";
+        return new MyHelpers().encodeTime(getTotalTime())+"["+new MyHelpers().encodeTime(getPhase1())+"]";
     }
 
     @Override
     public String toString() {
-        return solved + "/" + attempted + " in " + getTotalTime();
+        return solved + "/" + attempted + " in " + new MyHelpers().encodeTime(getTotalTime());
     }
 
 }

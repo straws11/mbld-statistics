@@ -11,6 +11,7 @@ public class AttemptInfo extends AppCompatActivity {
 
     //all components
     TextView tvInfoResult, tvInfoStats, tvInfoComment;
+    MyHelpers helper = new MyHelpers();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +33,10 @@ public class AttemptInfo extends AppCompatActivity {
 
         tvInfoResult.setText(mbldAttempt.getResult());
         String multiLineStats = "Total time: " + mbldAttempt.getTotalTime() +
-                "\nMemo Time: " + mbldAttempt.getPhase1() +
-                "\nMemo/cube: " + mbldAttempt.getMemoPerCube() +
-                "\nExec Time: " + mbldAttempt.getPhase2() +
-                "\nExec/cube: " + mbldAttempt.getExecPerCube();
+                "\nMemo Time: " + helper.encodeTime(mbldAttempt.getPhase1()) +
+                "\nMemo/cube: " + helper.encodeTime(mbldAttempt.getMemoPerCube()) +
+                "\nExec Time: " + helper.encodeTime(mbldAttempt.getPhase2()) +
+                "\nExec/cube: " + helper.encodeTime(mbldAttempt.getExecPerCube());
 
         tvInfoStats.setText(multiLineStats);
         tvInfoComment.setText(mbldAttempt.getComment());
