@@ -37,7 +37,7 @@
                 android:id="@+id/tvScoreItem"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical|right"
+                android:gravity="center_vertical|end"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:textSize="25sp" />

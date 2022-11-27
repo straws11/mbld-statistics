@@ -23,6 +23,8 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class HistoryFragment extends Fragment implements SelectItemListener {
 
@@ -62,7 +64,9 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
                 case R.id.btnDialogFullPage:
                     //load full page
                     Intent intent = new Intent(getActivity(),AttemptInfo.class);
-                    intent.putExtra("attemptItem",selMbldAttempt);
+                    intent.putExtra("attemptItem", selMbldAttempt);
+                    intent.putExtra("rankPos",getAttemptRank(attempts, selMbldAttempt));
+                    intent.putExtra("percentile",getPerformancePercentage(attempts, selMbldAttempt));
                     startActivity(intent);
                     break;
                 case R.id.btnDialogEdit:
@@ -138,6 +142,51 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         System.out.println("onResume");
         //notify update. should maybe use the more specific methods?
         //adapter.notifyDataSetChanged();
+    }
+
+    public int getAttemptRank(ArrayList<MBLDAttempt> attempts, MBLDAttempt mbldAttempt) {
+        //sort array according to points
+        Collections.sort(attempts,(att1,att2)->att2.getPoints()-att1.getPoints());
+        for (int i=0; i<attempts.size();i++) {
+            if (attempts.get(i).equals(mbldAttempt)) {
+                return i+1;
+            }
+        }
+        return 0;
+    }
+
+    public int getPerformancePercentage(ArrayList<MBLDAttempt> attempts, MBLDAttempt mbldAttempt) {
+        //produce a percentage for "this performed better than x% attempts of this size"
+        ArrayList<MBLDAttempt> sameAttempts = new ArrayList<>();
+        //creates array containing the scores of all attempts of equal size to this attempt
+        for (int i = 0; i < attempts.size(); i++) {
+            if (attempts.get(i).getAttempted() == mbldAttempt.getAttempted()) {
+                sameAttempts.add(attempts.get(i));
+            }
+        }
+        int sameAttemptsSize = sameAttempts.size();
+        //sorting
+        for (int i = 0; i < sameAttemptsSize-1; i++) {
+            for (int j = i+1; j < sameAttemptsSize; j++) {
+                if (sameAttempts.get(j).getPoints()>sameAttempts.get(i).getPoints()) {
+                     Collections.swap(sameAttempts, i, j);
+                } else if (sameAttempts.get(j).getPoints()==sameAttempts.get(i).getPoints() && sameAttempts.get(j).getTotalTime()<sameAttempts.get(i).getTotalTime()) {
+                    //if points are equal but j was faster
+                    Collections.swap(sameAttempts, i, j);
+                }
+            }
+        }
+        //get position of current attempt in the sameAttempts array
+        int pos = 0;
+        for (int i = 0; i < sameAttemptsSize; i++) {
+            System.out.println(i + "loop");
+            if (sameAttempts.get(i).equals(mbldAttempt)) {
+                pos = i+1;
+                break;
+            }
+        }
+        System.out.println(pos);
+        return (int) (100 -(((double) (pos-1)/sameAttemptsSize)*100));//todo still wrong LOL
     }
 
 }

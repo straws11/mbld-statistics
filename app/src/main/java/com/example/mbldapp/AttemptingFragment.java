@@ -94,7 +94,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
 
         } else if (runPhase==2) {//in memo, now go into exec
             runPhase++;
-            btnStart.setText("Stop");//TODO change text when multiphase is enabled so it says End Memo or smth
+            btnStart.setText("Stop");
             phase1 = totalSeconds;//get current time as memo time
 
         } else {//in exec aka runPhase = 3, now stop

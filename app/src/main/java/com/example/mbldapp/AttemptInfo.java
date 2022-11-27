@@ -10,7 +10,7 @@ import android.widget.TextView;
 public class AttemptInfo extends AppCompatActivity {
 
     //all components
-    TextView tvInfoResult, tvInfoStats, tvInfoComment;
+    TextView tvInfoResult, tvInfoStats, tvInfoComment, tvInfoPerformance;
     MyHelpers helper = new MyHelpers();
 
     @Override
@@ -25,21 +25,26 @@ public class AttemptInfo extends AppCompatActivity {
         //getting the attempt from the intent that caused this activity to start
         Intent intent = getIntent();
         MBLDAttempt mbldAttempt = (MBLDAttempt) intent.getSerializableExtra("attemptItem");
+        int rankPos = intent.getIntExtra("rankPos",0);
+        int percentage = intent.getIntExtra("percentile", 0);
 
         //loading all the info from the object into views
         tvInfoResult = findViewById(R.id.tvInfoResult);
         tvInfoStats = findViewById(R.id.tvInfoStats);
         tvInfoComment = findViewById(R.id.tvInfoComment);
+        tvInfoPerformance = findViewById(R.id.tvInfoPerformance);
 
         tvInfoResult.setText(mbldAttempt.getResult());
-        String multiLineStats = "Total time: " + mbldAttempt.getTotalTime() +
+        String multiLineStats = "Total time: " + helper.encodeTime(mbldAttempt.getTotalTime()) +
                 "\nMemo Time: " + helper.encodeTime(mbldAttempt.getPhase1()) +
                 "\nMemo/cube: " + helper.encodeTime(mbldAttempt.getMemoPerCube()) +
                 "\nExec Time: " + helper.encodeTime(mbldAttempt.getPhase2()) +
-                "\nExec/cube: " + helper.encodeTime(mbldAttempt.getExecPerCube());
+                "\nExec/cube: " + helper.encodeTime(mbldAttempt.getExecPerCube()) +
+                "\nAttempt Rank: " + rankPos;
 
         tvInfoStats.setText(multiLineStats);
-        tvInfoComment.setText(mbldAttempt.getComment());
+        tvInfoComment.setText("COMMENT:\n" + mbldAttempt.getComment());
+        tvInfoPerformance.setText(String.format("This attempt performed better than %2d%% of attempts of this size.",percentage));
 
     }
 }
