@@ -54,6 +54,10 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
                 case R.id.btnDialogDelete:
                     //delete attempt
                     attempts.remove(selMbldAttempt);
+                    helper.saveAttemptsToFile(getActivity(),attempts);
+                    dialog.dismiss();
+                    onResume();
+
                     break;
                 case R.id.btnDialogFullPage:
                     //load full page

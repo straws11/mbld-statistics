@@ -1,14 +1,7 @@
 package com.example.mbldapp;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.text.InputType;
-import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,7 +17,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 
 public class MyHelpers {
@@ -66,31 +58,31 @@ public class MyHelpers {
         return attempts;
     }
 
-    public void saveAttempts(Context context, MBLDAttempt mbldAttempt) {
+    public void saveAttempt(Context context, MBLDAttempt mbldAttempt) {
             // Convert JSON File to Java Object
-            Reader reader = null;
-            MyHelpers helper = new MyHelpers();
-            List<MBLDAttempt> attempts;
+        MyHelpers helper = new MyHelpers();
+        ArrayList<MBLDAttempt> attempts;
 
-            if ((helper.readAttempts(context))== null) {
-                attempts = new ArrayList<>();
-            } else {
-                attempts = helper.readAttempts(context);
-            }
-
-            //add new attempt
-            attempts.add(mbldAttempt);
-
-            //save using GSON
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            try {
-                FileWriter writer = new FileWriter(new File(context.getFilesDir(),"attempts.json"),false);
-                gson.toJson(attempts, writer);
-                writer.close();
-                Toast.makeText(context,"Attempt Logged",Toast.LENGTH_LONG).show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if ((helper.readAttempts(context))== null) {
+            attempts = new ArrayList<>();
+        } else {
+            attempts = helper.readAttempts(context);
         }
+
+        //add new attempt and save
+        attempts.add(mbldAttempt);
+        saveAttemptsToFile(context, attempts);
+        Toast.makeText(context,"Attempt Logged",Toast.LENGTH_LONG).show();
+    }
+
+    public void saveAttemptsToFile(Context context, ArrayList<MBLDAttempt> attempts) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try {
+            FileWriter writer = new FileWriter(new File(context.getFilesDir(),"attempts.json"),false);
+            gson.toJson(attempts,writer);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

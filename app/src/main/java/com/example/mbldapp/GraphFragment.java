@@ -24,6 +24,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
     private LineChart lineChart;
     private Button btnSetRange;
     private int startVal = 1;
-    private int endVal = 1000;
+    private int endVal = 10000;
     private String spinnerOption = "All";
 
     public GraphFragment() {
@@ -80,10 +81,18 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
 
             //init line and set properties
             lineChart = (LineChart) view.findViewById(R.id.line_chart);
+
             lineChart.getAxisLeft().setEnabled(false);
+
+            lineChart.getXAxis().setDrawGridLines(false);
+            lineChart.getXAxis().setGranularity(3f);
+
             lineChart.getAxisRight().setGranularity(2f);
-            lineChart.getLegend().setEnabled(false);
-            lineChart.getDescription().setPosition(800f,2050f);//fix!
+
+            lineChart.setScaleEnabled(false);
+            lineChart.setPinchZoom(false);
+            //lineChart.getLegend().setEnabled(false);
+            lineChart.getDescription().setPosition(800f,2050f);//TODO fix!
             lineChart.getDescription().setText("Graph of points for each attempt");
 
             Collections.reverse(attempts);//readAttempts reverses it for nice display but I need it to be ascending for graph to work
@@ -91,16 +100,14 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-
         return view;
     }
-
 
     private void plotLineChart(ArrayList<MBLDAttempt> filteredAttempts) {//lineData includes all LineDataSets (could be 1 or 3 depending on genDataSet options)
         //ILineDataSet list to contain all LineDataSets to plot
         List<ILineDataSet> dataSets = new ArrayList<>();
 
-        if (spinnerOption.compareTo("All")==0) {//need to plot all three, so genning the other two we need
+        if (spinnerOption.compareTo("All") == 0) {//need to plot all three, so genning the other two we need
             LineDataSet lineDataSetMemo = genDataSet(filteredAttempts, "Exec");
             LineDataSet lineDataSetExec = genDataSet(filteredAttempts, "Memo");
             dataSets.add(lineDataSetExec);
@@ -110,6 +117,7 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
         dataSets.add(lineDataSet);
         //final thing to plot
         LineData finalData = new LineData(dataSets);
+
         lineChart.setData(finalData);
         lineChart.invalidate();
     }
@@ -119,30 +127,54 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
         switch (option) {
             case "All":
                 for (int i = 0; i < dataSource.size(); i++)
-                    entries.add(new Entry(i, dataSource.get(i).getExecPerCube()+ dataSource.get(i).getMemoPerCube()));
+                    entries.add(new Entry(i+1, dataSource.get(i).getExecPerCube()+ dataSource.get(i).getMemoPerCube()));
                 break;
             case "Memo":
                 for (int i =0; i< dataSource.size(); i++)
-                    entries.add(new Entry(i,dataSource.get(i).getMemoPerCube()));
+                    entries.add(new Entry(i+1,dataSource.get(i).getMemoPerCube()));
                 break;
             case "Exec":
                 for (int i =0; i< dataSource.size(); i++)
-                    entries.add(new Entry(i,dataSource.get(i).getExecPerCube()));
+                    entries.add(new Entry(i+1,dataSource.get(i).getExecPerCube()));
         }
-        LineDataSet lineDataSet = new LineDataSet(entries, option);
-
+        LineDataSet lineDataSet;
+        if (option.compareTo("All")==0) {
+            lineDataSet = new LineDataSet(entries, "Total");
+        } else {
+            lineDataSet = new LineDataSet(entries, option);
+        }
+        lineDataSet.setDrawValues(false);
+        lineDataSet.setLineWidth(3f);//can be bad performance for thicker line
+        lineDataSet.setDrawCircles(false);
+        lineDataSet.setDrawHighlightIndicators(false);
+        //another switch statement to set the lineDataSet color..
+        switch (lineDataSet.getLabel()) {
+            case "Total"://label has been changed from "All" just above
+                lineDataSet.setColor(ColorTemplate.rgb("#de1861"));
+                //Toast.makeText(getActivity(), "sup", Toast.LENGTH_SHORT).show();
+                break;
+            case "Memo":
+                lineDataSet.setColor(ColorTemplate.rgb("#376bcc"));
+                break;
+            case "Exec":
+                lineDataSet.setColor(ColorTemplate.rgb("#25cc51"));
+                break;
+        }
         return lineDataSet;
     }
 
     private ArrayList<MBLDAttempt> extractData(ArrayList<MBLDAttempt> attempts) {//extract data in appropriate cube attempted range
         ArrayList<MBLDAttempt> filteredAttempts = new ArrayList<>();
-        for (int i = 0; i < attempts.size(); i++) {
-            int attSize = attempts.get(i).getAttempted();
-            if (attSize >= startVal && attSize <= endVal) {
-                filteredAttempts.add(attempts.get(i));
+        try {
+            for (int i = 0; i < attempts.size(); i++) {
+                int attSize = attempts.get(i).getAttempted();
+                if (attSize >= startVal && attSize <= endVal) {
+                    filteredAttempts.add(attempts.get(i));
+                }
             }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
-
         return filteredAttempts;
     }
 
@@ -162,14 +194,25 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
                 EditText edtFrom = dialogView.findViewById(R.id.edtDialogFromRange);
                 EditText edtTo = dialogView.findViewById(R.id.edtDialogToRange);
                 //assign the global vars to whatever user entered into the dialog edits
-                startVal = Integer.parseInt(edtFrom.getText().toString());
-                endVal = Integer.parseInt(edtTo.getText().toString());
+                String from = edtFrom.getText().toString();
+                String to = edtTo.getText().toString();
+                if (from.compareTo("")==0 && to.compareTo("")==0) {//default back
+                    startVal = 1;
+                    endVal = 10000;
+                } else if (to.compareTo("")==0) {
+                    endVal = 10000;
+                    startVal = Integer.parseInt(edtFrom.getText().toString());
+                } else if (from.compareTo("")==0) {
+                    startVal = 1;
+                    endVal = Integer.parseInt(edtTo.getText().toString());
+                } else {//if actually entered values for both
+                    startVal = Integer.parseInt(edtFrom.getText().toString());
+                    endVal = Integer.parseInt(edtTo.getText().toString());
+                }
                 //get filtered data by creating new arraylist (the original is kept with all attempts to reuse for a new filter later)
                 ArrayList<MBLDAttempt> filteredAttempts = extractData(attempts);
 
                 plotLineChart(filteredAttempts);//plots with the new info
-                //refresh graph
-
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -186,7 +229,9 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onResume() {
         super.onResume();
-        lineChart.invalidate();
+        Toast.makeText(getActivity(), "this doesnt refresh lol?", Toast.LENGTH_SHORT).show();
+        ArrayList<MBLDAttempt> filteredAttempts = extractData(attempts);
+        plotLineChart(filteredAttempts);
     }
 
     @Override
@@ -199,6 +244,6 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        //do nothing
     }
 }

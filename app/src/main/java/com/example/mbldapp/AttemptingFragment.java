@@ -1,20 +1,15 @@
 package com.example.mbldapp;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,21 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 
 public class AttemptingFragment extends Fragment implements View.OnClickListener {
@@ -154,7 +134,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         totalSeconds = 0;
         //debug display points Toast.makeText(this,Integer.toString(mbldAttempt.getScore()),Toast.LENGTH_SHORT).show();
         //SAVING
-        helper.saveAttempts(getActivity(),mbldAttempt);
+        helper.saveAttempt(getActivity(),mbldAttempt);
     }
 
     //MY FUNCTIONS USED
@@ -245,7 +225,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            totalSeconds+=50;//TODO this is for some more accurate timings, it should be ++
+            totalSeconds+=10;//TODO this is for some more accurate timings, it should be ++
             String time = helper.encodeTime(totalSeconds);
             tvTimer.setText(time);
             handler.postDelayed(this, 1000);//calls itself, ie the loop that keeps updating timer is called within itself
