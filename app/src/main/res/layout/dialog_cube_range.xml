@@ -21,11 +21,11 @@
         android:text="From"
         android:gravity="center"
         android:layout_below="@id/tvDialogTitle"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="40dp"
         />
 
     <EditText
-        android:layout_width="130dp"
+        android:layout_width="80dp"
         android:id="@+id/edtDialogFromRange"
         android:inputType="number"
         android:layout_height="50dp"
@@ -43,7 +43,7 @@
         android:layout_toRightOf="@+id/edtDialogFromRange"/>
 
     <EditText
-        android:layout_width="130dp"
+        android:layout_width="80dp"
         android:id="@+id/edtDialogToRange"
         android:inputType="number"
         android:layout_height="50dp"

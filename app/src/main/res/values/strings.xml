@@ -5,7 +5,8 @@
 
     <string-array name="spinOptions">
         <item>All</item>
-        <item>Memo</item>
-        <item>Exec</item>
+        <item>Memo/cube</item>
+        <item>Exec/cube</item>
+        <item>Points</item>
     </string-array>
 </resources>

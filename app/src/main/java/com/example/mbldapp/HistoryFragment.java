@@ -165,6 +165,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
             }
         }
         int sameAttemptsSize = sameAttempts.size();
+        System.out.println(sameAttemptsSize + "size");
         //sorting
         for (int i = 0; i < sameAttemptsSize-1; i++) {
             for (int j = i+1; j < sameAttemptsSize; j++) {
@@ -176,6 +177,7 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
                 }
             }
         }
+        System.out.println(sameAttempts);
         //get position of current attempt in the sameAttempts array
         int pos = 0;
         for (int i = 0; i < sameAttemptsSize; i++) {
@@ -186,7 +188,8 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
             }
         }
         System.out.println(pos);
-        return (int) (100 -(((double) (pos-1)/sameAttemptsSize)*100));//todo still wrong LOL
+        System.out.println((int) ((float) (sameAttemptsSize-pos)/(sameAttemptsSize-1)*100));
+        return (int) ((float) (sameAttemptsSize-pos)/(sameAttemptsSize-1)*100);//todo still wrong LOL
     }
 
 }

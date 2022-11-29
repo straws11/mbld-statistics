@@ -108,8 +108,8 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
         List<ILineDataSet> dataSets = new ArrayList<>();
 
         if (spinnerOption.compareTo("All") == 0) {//need to plot all three, so genning the other two we need
-            LineDataSet lineDataSetMemo = genDataSet(filteredAttempts, "Exec");
-            LineDataSet lineDataSetExec = genDataSet(filteredAttempts, "Memo");
+            LineDataSet lineDataSetMemo = genDataSet(filteredAttempts, "Exec/cube");
+            LineDataSet lineDataSetExec = genDataSet(filteredAttempts, "Memo/cube");
             dataSets.add(lineDataSetExec);
             dataSets.add(lineDataSetMemo);
         }
@@ -129,17 +129,22 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
                 for (int i = 0; i < dataSource.size(); i++)
                     entries.add(new Entry(i+1, dataSource.get(i).getExecPerCube()+ dataSource.get(i).getMemoPerCube()));
                 break;
-            case "Memo":
+            case "Memo/cube":
                 for (int i =0; i< dataSource.size(); i++)
                     entries.add(new Entry(i+1,dataSource.get(i).getMemoPerCube()));
                 break;
-            case "Exec":
+            case "Exec/cube":
                 for (int i =0; i< dataSource.size(); i++)
                     entries.add(new Entry(i+1,dataSource.get(i).getExecPerCube()));
+                break;
+            case "Points":
+                for (int i = 0; i < dataSource.size(); i++)
+                    entries.add(new Entry(i+i,dataSource.get(i).getPoints()));
+                break;
         }
         LineDataSet lineDataSet;
         if (option.compareTo("All")==0) {
-            lineDataSet = new LineDataSet(entries, "Total");
+            lineDataSet = new LineDataSet(entries, "Total/cube");
         } else {
             lineDataSet = new LineDataSet(entries, option);
         }
@@ -149,16 +154,18 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
         lineDataSet.setDrawHighlightIndicators(false);
         //another switch statement to set the lineDataSet color..
         switch (lineDataSet.getLabel()) {
-            case "Total"://label has been changed from "All" just above
+            case "Total/cube"://label has been changed from "All" just above
                 lineDataSet.setColor(ColorTemplate.rgb("#de1861"));
                 //Toast.makeText(getActivity(), "sup", Toast.LENGTH_SHORT).show();
                 break;
-            case "Memo":
+            case "Memo/cube":
                 lineDataSet.setColor(ColorTemplate.rgb("#376bcc"));
                 break;
-            case "Exec":
+            case "Exec/cube":
                 lineDataSet.setColor(ColorTemplate.rgb("#25cc51"));
                 break;
+            case "Points":
+                lineDataSet.setColor(ColorTemplate.rgb("#9d29a3"));
         }
         return lineDataSet;
     }
@@ -229,7 +236,8 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getActivity(), "this doesnt refresh lol?", Toast.LENGTH_SHORT).show();
+        attempts = new MyHelpers().readAttempts(getActivity());
+        Collections.reverse(attempts);
         ArrayList<MBLDAttempt> filteredAttempts = extractData(attempts);
         plotLineChart(filteredAttempts);
     }
