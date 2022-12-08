@@ -1,6 +1,10 @@
 package com.example.mbldapp;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -18,10 +22,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Timer;
+
 
 public class AttemptingFragment extends Fragment implements View.OnClickListener {
     //vars
-    private Handler handler = new Handler();
+    public Handler handler = new Handler();
     MyHelpers helper = new MyHelpers();//gives me access to my helper methods like encoding time and saving and reading attempts
     EditText edtAmountSolved;
     EditText edtCubeAmount;
@@ -43,8 +49,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_attempting); - handled by onCreateView ?
-        //declared globally, assigned AFTER setting content view above
     }
 
     @Override
@@ -89,7 +93,9 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         if (runPhase==1) { //attempt inactive, now go into memo
             //start running
             runPhase++;//now in memo
-            handler.postDelayed(runnable,1000);//starts the worker? thread, it will loop within itself now
+            //handler.postDelayed(runnable,1000);//starts the worker? thread, it will loop within itself now. NOW IN TimerBackgroundService.java
+            Intent serviceIntent = new Intent(getActivity(), TimerBackGroundService.class);
+            getActivity().startService(serviceIntent);
             btnStart.setText("Split");
 
         } else if (runPhase==2) {//in memo, now go into exec
@@ -98,7 +104,9 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             phase1 = totalSeconds;//get current time as memo time
 
         } else {//in exec aka runPhase = 3, now stop
-            handler.removeCallbacks(runnable);//stops the infinite runnable loop
+            //handler.removeCallbacks(runnable);//stops the infinite runnable loop
+            Intent serviceIntent = new Intent(getActivity(), TimerBackGroundService.class);
+            getActivity().stopService(serviceIntent);
             phase2 = totalSeconds-phase1;//get exec time
             runPhase=1;//resets var
             btnStart.setVisibility(View.INVISIBLE);
@@ -132,7 +140,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         phase1 = 0;
         phase2 = 0;
         totalSeconds = 0;
-        //debug display points Toast.makeText(this,Integer.toString(mbldAttempt.getScore()),Toast.LENGTH_SHORT).show();
         //SAVING
         helper.saveAttempt(getActivity(),mbldAttempt);
     }
@@ -165,36 +172,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             //Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
         }
     }
-    //old method, replaced in MyHelpers.java
-   /* public void saveAttempt(MBLDAttempt mbldAttempt) {
-        // Convert JSON File to Java Object
-        Reader reader = null;
-        MyHelpers helper = new MyHelpers();
-        List<MBLDAttempt> attempts = helper.readAttempts(getActivity());
-
-        if (attempts==null) {//no attempts exist create empty array
-            attempts = new ArrayList<>();
-        }
-
-        //add new attempt
-        attempts.add(mbldAttempt);
-
-        //save using GSON
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try {
-            FileWriter writer = new FileWriter(new File(getActivity().getFilesDir(),"attempts.json"),false);
-            gson.toJson(attempts, writer);
-            writer.close();
-            Toast.makeText(getActivity(),"Attempt Logged",Toast.LENGTH_LONG).show();
-
-            //update RecyclerView adapter with new data point
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -222,36 +199,30 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private Runnable runnable = new Runnable() {
+    final private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //update components
+            totalSeconds+=10;//TODO this is for some more accurate timings, it should be ++
+            String time = helper.encodeTime(totalSeconds);
+            System.out.println("updated");
+            tvTimer.setText(time);
+        }
+    };
+
+    /*public Runnable runnable = new Runnable() {
         @Override
         public void run() {
             totalSeconds+=10;//TODO this is for some more accurate timings, it should be ++
             String time = helper.encodeTime(totalSeconds);
             tvTimer.setText(time);
             handler.postDelayed(this, 1000);//calls itself, ie the loop that keeps updating timer is called within itself
-        }//end of public void
-    }; //end of private runnable variable?
+        }
+    };*/
 
-  /*  public void showDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final EditText input = new EditText(getActivity());
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        builder.setView(input);
-        builder.setTitle("Enter Amount Solved");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                solved = Integer.parseInt(input.getText().toString());//parseint is essentially strtoint
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-                //Toast.makeText(getApplicationContext(),"loser",Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.show();
-    }*/
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(receiver, new IntentFilter("com.example.mbldApp"));
+    }
 }

@@ -44,7 +44,8 @@ public class AttemptInfo extends AppCompatActivity {
 
         tvInfoStats.setText(multiLineStats);
         tvInfoComment.setText("COMMENT:\n" + mbldAttempt.getComment());
-        tvInfoPerformance.setText(String.format("This attempt performed better than %2d%% of attempts of this size.",percentage));
+        if (percentage == -1) tvInfoPerformance.setText("This is your only attempt of this size.");
+        else tvInfoPerformance.setText(String.format("This attempt performed better than %2d%% of attempts of this size.",percentage));
 
     }
 }

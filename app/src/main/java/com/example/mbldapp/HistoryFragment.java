@@ -165,7 +165,6 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
             }
         }
         int sameAttemptsSize = sameAttempts.size();
-        System.out.println(sameAttemptsSize + "size");
         //sorting
         for (int i = 0; i < sameAttemptsSize-1; i++) {
             for (int j = i+1; j < sameAttemptsSize; j++) {
@@ -177,19 +176,20 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
                 }
             }
         }
-        System.out.println(sameAttempts);
+        //System.out.println(sameAttempts);//TODO add return of -1 when there is only 1 attempt in array so my intent.getExtra gets -1 to change the output user message
         //get position of current attempt in the sameAttempts array
         int pos = 0;
         for (int i = 0; i < sameAttemptsSize; i++) {
-            System.out.println(i + "loop");
+            //System.out.println(i + "loop");
             if (sameAttempts.get(i).equals(mbldAttempt)) {
                 pos = i+1;
                 break;
             }
         }
-        System.out.println(pos);
-        System.out.println((int) ((float) (sameAttemptsSize-pos)/(sameAttemptsSize-1)*100));
-        return (int) ((float) (sameAttemptsSize-pos)/(sameAttemptsSize-1)*100);//todo still wrong LOL
+        if (sameAttempts.size() == 1) return -1;
+        //System.out.println(pos);
+        //System.out.println((int) ((float) (sameAttemptsSize-pos)/(sameAttemptsSize-1)*100));
+        return (int) ((float) (sameAttemptsSize-pos)/(sameAttemptsSize-1)*100);
     }
 
 }
