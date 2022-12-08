@@ -18,7 +18,7 @@ public class TimerBackGroundService extends Service {
         }
     };
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {//TODO potentially closes after some minutes of minimized, no evidence
         //when service is started
         handler.postDelayed(runnable,1000);//actually starts the runnable for the first time
 

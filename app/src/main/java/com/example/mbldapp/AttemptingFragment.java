@@ -1,19 +1,32 @@
 package com.example.mbldapp;
 
+import static androidx.core.app.NotificationChannelCompat.DEFAULT_CHANNEL_ID;
+
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +38,16 @@ import android.widget.Toast;
 import java.util.Timer;
 
 
-public class AttemptingFragment extends Fragment implements View.OnClickListener {
+public class AttemptingFragment extends Fragment implements View.OnClickListener, LifecycleObserver {
     //vars
     public Handler handler = new Handler();
     MyHelpers helper = new MyHelpers();//gives me access to my helper methods like encoding time and saving and reading attempts
     EditText edtAmountSolved;
+    NotificationCompat.Builder builder;
+    NotificationManagerCompat notificationManager;
+    private Intent notificationIntent;
+    private PendingIntent pendingIntent;
+    public static int notificationId = 11;//i need one but I just made up the value, idk what it means.
     EditText edtCubeAmount;
     EditText edtComment;
     Button btnGen;
@@ -49,6 +67,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     }
 
     @Override
@@ -71,7 +90,39 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         btnStart.setOnClickListener(this);
         btnNewAttempt.setOnClickListener(this);
 
+        //no clue if this belongs here
+        notificationManager = NotificationManagerCompat.from(getActivity());
+        notificationIntent = new Intent(getActivity(), AttemptingFragment.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        pendingIntent = PendingIntent.getActivity(getActivity(), 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        //creating the notification object
+        builder = new NotificationCompat.Builder(getActivity(), "11")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Title")
+                .setContentText("contenttext")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
         return view;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private void onAppBackgrounded() {
+        //show the notify!
+        notificationManager.notify(notificationId, builder.build());
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private void onAppForegrounded() {
+        //hide the notify?
+        try {
+            notificationManager.cancel(11);//TODO please fix these disgusting hardcoded ids
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //System.out.println("foregrounded!"); runs when app is opened from minimized state
     }
 
     public void onbtnGenScramblesClicked(View view) {
@@ -207,18 +258,12 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             String time = helper.encodeTime(totalSeconds);
             System.out.println("updated");
             tvTimer.setText(time);
+            //update notification text
+
+
         }
     };
 
-    /*public Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            totalSeconds+=10;//TODO this is for some more accurate timings, it should be ++
-            String time = helper.encodeTime(totalSeconds);
-            tvTimer.setText(time);
-            handler.postDelayed(this, 1000);//calls itself, ie the loop that keeps updating timer is called within itself
-        }
-    };*/
 
     @Override
     public void onResume() {

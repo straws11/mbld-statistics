@@ -29,8 +29,11 @@ android {
 
 dependencies {
     def fragment_version = "1.5.3"
+    def core_version = "1.6.0"
     implementation "androidx.fragment:fragment:$fragment_version"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation "androidx.core:core:$core_version"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.google.android.material:material:1.7.0'
