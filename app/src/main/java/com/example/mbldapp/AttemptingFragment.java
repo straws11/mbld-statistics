@@ -15,9 +15,11 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -40,7 +42,7 @@ import java.util.Timer;
 
 public class AttemptingFragment extends Fragment implements View.OnClickListener, LifecycleObserver {
     //vars
-    public Handler handler = new Handler();
+    //public Handler handler = new Handler();
     MyHelpers helper = new MyHelpers();//gives me access to my helper methods like encoding time and saving and reading attempts
     EditText edtAmountSolved;
     NotificationCompat.Builder builder;
@@ -56,6 +58,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     TextView tvTimer;
     TextView tvResultDisplay;
     TextView tvAmountSolved;
+    boolean fragmentBackgrounded = false;
     int runPhase = 1; //1 not started/finished/stopped, 2 in memo, 3 in exec
     int phase1, phase2, totalSeconds = 0;
     int solved;
@@ -70,6 +73,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,33 +96,41 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
 
         //no clue if this belongs here
         notificationManager = NotificationManagerCompat.from(getActivity());
-        notificationIntent = new Intent(getActivity(), AttemptingFragment.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        pendingIntent = PendingIntent.getActivity(getActivity(), 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        //notificationIntent = new Intent(getActivity(), AttemptingFragment.class);
+        //notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage("com.example.mbldapp");
+        pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         //creating the notification object
         builder = new NotificationCompat.Builder(getActivity(), "11")
                 .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("Title")
-                .setContentText("contenttext")
+                .setContentTitle("00:00")
+                .setContentText("In PHASE of CUBENO cube multiblind attempt")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setSilent(true)
+                .setOngoing(true)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
         return view;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackgrounded() {
-        //show the notify!
-        notificationManager.notify(notificationId, builder.build());
+        //show the notify if attempt is active (phase 2 or 3)
+        fragmentBackgrounded = true;
+        if (runPhase != 1) notificationManager.notify(notificationId, builder.build());
+        //setAlertOnlyOnce();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private void onAppForegrounded() {
         //hide the notify?
+        fragmentBackgrounded = false;
         try {
-            notificationManager.cancel(11);//TODO please fix these disgusting hardcoded ids
+            if (runPhase != 1) notificationManager.cancel(11);//TODO please fix these disgusting hardcoded ids
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -256,11 +268,17 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             //update components
             totalSeconds+=10;//TODO this is for some more accurate timings, it should be ++
             String time = helper.encodeTime(totalSeconds);
-            System.out.println("updated");
+            //System.out.println("updated");
             tvTimer.setText(time);
             //update notification text
-
-
+            if (runPhase != 1 && fragmentBackgrounded) {//if timer is actually running
+                builder.setContentTitle(time);
+                String phase;
+                if (runPhase == 2) {phase = "memo";}
+                        else {phase = "exec";}
+                builder.setContentText("In "+phase+" of "+attempted+" cube attempt");
+                notificationManager.notify(notificationId, builder.build());
+            }
         }
     };
 
