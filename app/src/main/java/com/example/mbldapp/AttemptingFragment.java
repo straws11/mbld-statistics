@@ -3,6 +3,7 @@ package com.example.mbldapp;
 import static androidx.core.app.NotificationChannelCompat.DEFAULT_CHANNEL_ID;
 
 import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -45,7 +46,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     //public Handler handler = new Handler();
     MyHelpers helper = new MyHelpers();//gives me access to my helper methods like encoding time and saving and reading attempts
     EditText edtAmountSolved;
-    NotificationCompat.Builder builder;
+    TimerForeGroundService timerService = new TimerForeGroundService();
+    //NotificationCompat.Builder builder;
     NotificationManagerCompat notificationManager;
     private Intent notificationIntent;
     private PendingIntent pendingIntent;
@@ -103,7 +105,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         //creating the notification object
-        builder = new NotificationCompat.Builder(getActivity(), "11")
+        /*builder = new NotificationCompat.Builder(getActivity(), "11")
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("00:00")
                 .setContentText("In PHASE of CUBENO cube multiblind attempt")
@@ -112,7 +114,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                 .setAutoCancel(true)
                 .setSilent(true)
                 .setOngoing(true)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);*/
 
         return view;
     }
@@ -121,7 +123,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     private void onAppBackgrounded() {
         //show the notify if attempt is active (phase 2 or 3)
         fragmentBackgrounded = true;
-        if (runPhase != 1) notificationManager.notify(notificationId, builder.build());
+        if (runPhase != 1) notificationManager.notify(notificationId, timerService.builder.build());
         //setAlertOnlyOnce();
     }
 
@@ -130,7 +132,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         //hide the notify?
         fragmentBackgrounded = false;
         try {
-            if (runPhase != 1) notificationManager.cancel(11);//TODO please fix these disgusting hardcoded ids
+            if (runPhase != 1) notificationManager.cancel(notificationId);//TODO please fix these disgusting hardcoded ids
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,8 +159,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             //start running
             runPhase++;//now in memo
             //handler.postDelayed(runnable,1000);//starts the worker? thread, it will loop within itself now. NOW IN TimerBackgroundService.java
-            Intent serviceIntent = new Intent(getActivity(), TimerBackGroundService.class);
-            getActivity().startService(serviceIntent);
+            Intent serviceIntent = new Intent(getActivity(), TimerForeGroundService.class);
+            getActivity().startForegroundService(serviceIntent);
             btnStart.setText("Split");
 
         } else if (runPhase==2) {//in memo, now go into exec
@@ -168,7 +170,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
 
         } else {//in exec aka runPhase = 3, now stop
             //handler.removeCallbacks(runnable);//stops the infinite runnable loop
-            Intent serviceIntent = new Intent(getActivity(), TimerBackGroundService.class);
+            Intent serviceIntent = new Intent(getActivity(), TimerForeGroundService.class);
             getActivity().stopService(serviceIntent);
             phase2 = totalSeconds-phase1;//get exec time
             runPhase=1;//resets var
@@ -206,9 +208,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         //SAVING
         helper.saveAttempt(getActivity(),mbldAttempt);
     }
-
-    //MY FUNCTIONS USED
-    //--------------------------//
 
     @Override
     public void onClick(View view) {
@@ -271,21 +270,24 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             //System.out.println("updated");
             tvTimer.setText(time);
             //update notification text
-            if (runPhase != 1 && fragmentBackgrounded) {//if timer is actually running
-                builder.setContentTitle(time);
+            NotificationCompat.Builder builder = intent.getParcelableExtra("builder");
+            if (runPhase != 1) {//if timer is actually running
                 String phase;
                 if (runPhase == 2) {phase = "memo";}
                         else {phase = "exec";}
-                builder.setContentText("In "+phase+" of "+attempted+" cube attempt");
-                notificationManager.notify(notificationId, builder.build());
+                updateNotify(builder,time,phase);
             }
         }
     };
 
-
+    public void updateNotify(NotificationCompat.Builder builder, String time, String phase) {
+        builder.setContentTitle(time);
+        builder.setContentText("In "+phase+" of TODO cube attempt");
+        notificationManager.notify(notificationId,builder.build());
+    }
     @Override
     public void onResume() {
-        super.onResume();
+        super.onResume();//todo is this registerreceiver supposed to be here?
         getActivity().registerReceiver(receiver, new IntentFilter("com.example.mbldApp"));
     }
 }
