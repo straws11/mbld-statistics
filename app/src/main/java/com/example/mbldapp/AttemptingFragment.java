@@ -115,6 +115,16 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     }*/
 
     public void onbtnGenScramblesClicked() {
+        try {
+            attempted = Integer.parseInt(edtCubeAmount.getText().toString());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            attempted = 0;
+        }
+        if (attempted<2) {
+            Toast.makeText(getContext(), "Not a valid size for an attempt!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //hides components that get my scramble count
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 101);
@@ -125,7 +135,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         btnStart.setVisibility(View.VISIBLE);
         tvTimer.setVisibility(View.VISIBLE);
 
-        attempted = Integer.parseInt(edtCubeAmount.getText().toString());
         //TODO:generate and display scrambles
     }
 
@@ -173,6 +182,17 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     }
 
     public void onbtnNextAttemptClicked() {
+        //defensive programming, data validation
+        try {
+            solved = Integer.parseInt(edtAmountSolved.getText().toString());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            solved = -1;
+        }
+        if (solved < 0) {
+            Toast.makeText(getContext(), "Please enter the amount you solved!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //hide
         btnNewAttempt.setVisibility(View.INVISIBLE);
         edtAmountSolved.setVisibility(View.INVISIBLE);
@@ -186,7 +206,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         edtCubeAmount.setText(null);
         //save attempt
         //create mbld object
-        solved = Integer.parseInt(edtAmountSolved.getText().toString());
         String comment = edtComment.getText().toString();
         MBLDAttempt mbldAttempt = new MBLDAttempt(solved,attempted,phase1,phase2,comment);
         //Resetting vars
@@ -307,6 +326,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         EditText edtDialogExec = dialogView.findViewById(R.id.edtExecTime);
 
         edtDialogAttempted.setText(Integer.toString(attempted));
+        if (solved!=0) edtDialogSolved.setText(Integer.toString(solved));
         edtDialogMemo.setText(helper.encodeTime(phase1));
         edtDialogExec.setText(helper.encodeTime(phase2));
 
@@ -322,7 +342,10 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                 String dialogMemoVal = edtDialogMemo.getText().toString();
                 String dialogExecVal = edtDialogExec.getText().toString();
                 if (!dialogAttVal.equals("")) attempted = Integer.parseInt(dialogAttVal);
-                if (!dialogSolvedVal.equals("")) solved = Integer.parseInt(dialogAttVal);
+                if (!dialogSolvedVal.equals("")) {
+                    solved = Integer.parseInt(dialogSolvedVal);
+                    edtAmountSolved.setText(Integer.toString(solved));
+                }
 
                 if (!dialogMemoVal.equals("")) {
                     int memoSeconds;
@@ -331,9 +354,9 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                         memoSeconds = Integer.parseInt(split[0])*3600 + Integer.parseInt(split[1])*60 + Integer.parseInt(split[2]);
                     } else if (split.length == 2) {
                         memoSeconds = Integer.parseInt(split[0])*60 + Integer.parseInt(split[1]);
-                    } else memoSeconds = 0;
+                    } else memoSeconds = Integer.parseInt(dialogMemoVal);
 
-                    phase2 = memoSeconds;
+                    phase1 = memoSeconds;
                 }
 
                 if (!dialogExecVal.equals("")) {
@@ -343,12 +366,12 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                         execSeconds = Integer.parseInt(split[0])*3600 + Integer.parseInt(split[1])*60 + Integer.parseInt(split[2]);
                     } else if (split.length == 2) {
                         execSeconds = Integer.parseInt(split[0])*60 + Integer.parseInt(split[1]);
-                    } else execSeconds = 0;
+                    } else execSeconds = Integer.parseInt(dialogExecVal);
 
                     phase2 = execSeconds;
                 }
-
-                tvResultDisplay.setText(helper.encodeTime(totalSeconds)+"["+helper.encodeTime(phase2)+"]");
+                totalSeconds = phase1+phase2;
+                tvResultDisplay.setText(helper.encodeTime(totalSeconds)+"["+helper.encodeTime(phase1)+"]");
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

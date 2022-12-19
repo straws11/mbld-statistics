@@ -3,6 +3,8 @@ package com.example.mbldapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -100,6 +102,27 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+        //setting colors according to app theme (dark/light)
+        int nightModeFlags =
+                getContext().getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                lineChart.getXAxis().setTextColor(Color.WHITE);
+                lineChart.getAxisRight().setTextColor(Color.WHITE);
+                lineChart.getLegend().setTextColor(Color.WHITE);
+                break;
+
+            case Configuration.UI_MODE_NIGHT_NO:
+                //nothing
+                break;
+
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                //do nothing
+                break;
+        }
+
+
         return view;
     }
 
