@@ -1,35 +1,24 @@
 package com.example.mbldapp;
 
-import static androidx.core.app.NotificationChannelCompat.DEFAULT_CHANNEL_ID;
 
 import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,23 +27,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Timer;
+import java.util.ArrayList;
+import java.util.Date;
+
+import kotlinx.coroutines.flow.SharedFlow;
 
 
 public class AttemptingFragment extends Fragment implements View.OnClickListener, LifecycleObserver {
     //vars
-    //public Handler handler = new Handler();
+    public Handler handler = new Handler();
     MyHelpers helper = new MyHelpers();//gives me access to my helper methods like encoding time and saving and reading attempts
     EditText edtAmountSolved;
-    TimerForeGroundService timerService = new TimerForeGroundService();
-    //NotificationCompat.Builder builder;
-    NotificationManagerCompat notificationManager;
-    private Intent notificationIntent;
-    private PendingIntent pendingIntent;
-    public static int notificationId = 11;//i need one but I just made up the value, idk what it means.
     EditText edtCubeAmount;
     EditText edtComment;
     Button btnGen;
+    Button btnEditResult;
     Button btnStart;
     Button btnNewAttempt;
     TextView tvTimer;
@@ -84,6 +71,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         edtCubeAmount = view.findViewById(R.id.edtCubeAmount);
         edtAmountSolved = view.findViewById(R.id.edtSolved);
         btnGen = view.findViewById(R.id.btnGetScrambles);
+        btnEditResult = view.findViewById(R.id.btnEditResult);
         btnStart = view.findViewById(R.id.btnStartAttempt);
         btnNewAttempt = view.findViewById(R.id.btnNextAttempt);
         tvTimer = view.findViewById(R.id.tvTimer);
@@ -95,31 +83,18 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         btnGen.setOnClickListener(this);
         btnStart.setOnClickListener(this);
         btnNewAttempt.setOnClickListener(this);
+        btnEditResult.setOnClickListener(this);
 
-        //no clue if this belongs here
-        notificationManager = NotificationManagerCompat.from(getActivity());
-        //notificationIntent = new Intent(getActivity(), AttemptingFragment.class);
-        //notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage("com.example.mbldapp");
-        pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        //creating the notification object
-        /*builder = new NotificationCompat.Builder(getActivity(), "11")
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("00:00")
-                .setContentText("In PHASE of CUBENO cube multiblind attempt")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setSilent(true)
-                .setOngoing(true)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);*/
+        //update the timer if there was an attempt ongoing before the app got killed (either by user or Android)
+        //temp
+        //SharedPreferences sharedPreferences = getActivity().getSharedPreferences("timerState",Context.MODE_PRIVATE);
+        //sharedPreferences.edit().clear().commit();
+        getSharedPrefInfo();
 
         return view;
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    /*@OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackgrounded() {
         //show the notify if attempt is active (phase 2 or 3)
         fragmentBackgrounded = true;
@@ -137,9 +112,9 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             e.printStackTrace();
         }
         //System.out.println("foregrounded!"); runs when app is opened from minimized state
-    }
+    }*/
 
-    public void onbtnGenScramblesClicked(View view) {
+    public void onbtnGenScramblesClicked() {
         //hides components that get my scramble count
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 101);
@@ -154,24 +129,33 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         //TODO:generate and display scrambles
     }
 
-    public void onbtnStartClicked(View view) {
+    public void onbtnStartClicked() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("timerState",Context.MODE_PRIVATE);
         if (runPhase==1) { //attempt inactive, now go into memo
             //start running
             runPhase++;//now in memo
-            //handler.postDelayed(runnable,1000);//starts the worker? thread, it will loop within itself now. NOW IN TimerBackgroundService.java
-            Intent serviceIntent = new Intent(getActivity(), TimerForeGroundService.class);
-            getActivity().startForegroundService(serviceIntent);
+            //Use shared preferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong("time", new Date().getTime());
+            editor.putInt("attempted",attempted);
+            editor.putInt("runPhase",runPhase);
+            editor.apply();
+            tvResultDisplay.setVisibility(View.VISIBLE);
+            tvResultDisplay.setText(attempted + " cube attempt");
+
+            handler.postDelayed(runnable,1000);//starts the worker? thread, it will loop within itself now. NOW IN TimerBackgroundService.java
             btnStart.setText("Split");
 
         } else if (runPhase==2) {//in memo, now go into exec
             runPhase++;
             btnStart.setText("Stop");
             phase1 = totalSeconds;//get current time as memo time
+            sharedPreferences.edit().putInt("runPhase",runPhase).apply();
+            sharedPreferences.edit().putInt("phase1",phase1).apply();
 
         } else {//in exec aka runPhase = 3, now stop
-            //handler.removeCallbacks(runnable);//stops the infinite runnable loop
-            Intent serviceIntent = new Intent(getActivity(), TimerForeGroundService.class);
-            getActivity().stopService(serviceIntent);
+            handler.removeCallbacks(runnable);//stops the infinite runnable loop
+            sharedPreferences.edit().clear().apply();
             phase2 = totalSeconds-phase1;//get exec time
             runPhase=1;//resets var
             btnStart.setVisibility(View.INVISIBLE);
@@ -182,16 +166,20 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             btnNewAttempt.setVisibility(View.VISIBLE);
             edtAmountSolved.setVisibility(View.VISIBLE);
             edtAmountSolved.setText(null);
+            btnEditResult.setVisibility(View.VISIBLE);
             tvAmountSolved.setVisibility(View.VISIBLE);
+            tvResultDisplay.setText(helper.encodeTime(totalSeconds)+"["+helper.encodeTime(phase1)+"]");
         }
     }
 
-    public void onbtnNextAttemptClicked(View view) {
+    public void onbtnNextAttemptClicked() {
         //hide
         btnNewAttempt.setVisibility(View.INVISIBLE);
         edtAmountSolved.setVisibility(View.INVISIBLE);
         tvAmountSolved.setVisibility(View.INVISIBLE);
         edtComment.setVisibility(View.INVISIBLE);
+        tvResultDisplay.setVisibility(View.INVISIBLE);
+        btnEditResult.setVisibility(View.INVISIBLE);
         //show
         btnGen.setVisibility(View.VISIBLE);
         edtCubeAmount.setVisibility(View.VISIBLE);
@@ -209,18 +197,24 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         helper.saveAttempt(getActivity(),mbldAttempt);
     }
 
+    public void onbtnEditResultClicked() {
+        showEditResultDialog(getContext());
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnGetScrambles:
-                onbtnGenScramblesClicked(view);
+                onbtnGenScramblesClicked();
                 break;
             case R.id.btnNextAttempt:
-                onbtnNextAttemptClicked(view);
+                onbtnNextAttemptClicked();
                 break;
             case R.id.btnStartAttempt:
-                onbtnStartClicked(view);
+                onbtnStartClicked();
                 break;
+            case R.id.btnEditResult:
+                onbtnEditResultClicked();
         }
     }
 
@@ -261,33 +255,117 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    final private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private Runnable runnable = new Runnable() {
         @Override
-        public void onReceive(Context context, Intent intent) {
-            //update components
-            totalSeconds+=10;//TODO this is for some more accurate timings, it should be ++
+        public void run() {
+            totalSeconds++;//TODO this is for some more accurate timings, it should be ++
             String time = helper.encodeTime(totalSeconds);
-            //System.out.println("updated");
             tvTimer.setText(time);
-            //update notification text
-            NotificationCompat.Builder builder = intent.getParcelableExtra("builder");
-            if (runPhase != 1) {//if timer is actually running
-                String phase;
-                if (runPhase == 2) {phase = "memo";}
-                        else {phase = "exec";}
-                updateNotify(builder,time,phase);
-            }
+            handler.postDelayed(this, 1000);//calls itself, ie the loop that keeps updating timer is called within itself
         }
     };
 
-    public void updateNotify(NotificationCompat.Builder builder, String time, String phase) {
-        builder.setContentTitle(time);
-        builder.setContentText("In "+phase+" of TODO cube attempt");
-        notificationManager.notify(notificationId,builder.build());
+    private void getSharedPrefInfo() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("timerState",Context.MODE_PRIVATE);
+        attempted = sharedPreferences.getInt("attempted",0);
+        if (attempted != 0) {//if actually doing an attempt
+            //System.out.println("should be busy with an attempt");
+            runPhase = sharedPreferences.getInt("runPhase",2);
+            totalSeconds = (int) ((new Date().getTime() - sharedPreferences.getLong("time",0))/1000);//returns total time that has elapsed since attempt started
+            tvTimer.setText(helper.encodeTime(totalSeconds));
+            handler.postDelayed(runnable,1000);
+
+            //setup components as if in an attempt
+            edtCubeAmount.setVisibility(View.INVISIBLE);
+            btnGen.setVisibility(View.INVISIBLE);
+            btnStart.setVisibility(View.VISIBLE);
+            tvTimer.setVisibility(View.VISIBLE);
+            //updating labels and getting phase time where applicable
+            if (runPhase == 2) {
+                //if in memo
+                btnStart.setText("Split");
+            }
+            else if (runPhase == 3) {
+                //if in exec
+                phase1 = sharedPreferences.getInt("phase1",0);
+                btnStart.setText("Stop");
+            }
+        }
+
     }
+
+    public void showEditResultDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        //inflater to create or build the layout from the xml file
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_edit_result,null);//this is crucial for me to get components on this view later!
+        builder.setView(dialogView);
+        //getting component references
+        EditText edtDialogSolved = dialogView.findViewById(R.id.edtCubesSolved);
+        EditText edtDialogAttempted = dialogView.findViewById(R.id.edtCubesAttempted);
+        EditText edtDialogMemo = dialogView.findViewById(R.id.edtMemoTime);
+        EditText edtDialogExec = dialogView.findViewById(R.id.edtExecTime);
+
+        edtDialogAttempted.setText(Integer.toString(attempted));
+        edtDialogMemo.setText(helper.encodeTime(phase1));
+        edtDialogExec.setText(helper.encodeTime(phase2));
+
+        //the buttons are somehow automatically appending to the layout on the bottom, along with their onclick listeners
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                //do yes stuff
+
+                String dialogAttVal = edtDialogAttempted.getText().toString();
+                String dialogSolvedVal = edtDialogSolved.getText().toString();
+                String dialogMemoVal = edtDialogMemo.getText().toString();
+                String dialogExecVal = edtDialogExec.getText().toString();
+                if (!dialogAttVal.equals("")) attempted = Integer.parseInt(dialogAttVal);
+                if (!dialogSolvedVal.equals("")) solved = Integer.parseInt(dialogAttVal);
+
+                if (!dialogMemoVal.equals("")) {
+                    int memoSeconds;
+                    String[] split = dialogMemoVal.split(":");
+                    if (split.length == 3) {
+                        memoSeconds = Integer.parseInt(split[0])*3600 + Integer.parseInt(split[1])*60 + Integer.parseInt(split[2]);
+                    } else if (split.length == 2) {
+                        memoSeconds = Integer.parseInt(split[0])*60 + Integer.parseInt(split[1]);
+                    } else memoSeconds = 0;
+
+                    phase2 = memoSeconds;
+                }
+
+                if (!dialogExecVal.equals("")) {
+                    int execSeconds;
+                    String[] split = dialogExecVal.split(":");
+                    if (split.length == 3) {
+                        execSeconds = Integer.parseInt(split[0])*3600 + Integer.parseInt(split[1])*60 + Integer.parseInt(split[2]);
+                    } else if (split.length == 2) {
+                        execSeconds = Integer.parseInt(split[0])*60 + Integer.parseInt(split[1]);
+                    } else execSeconds = 0;
+
+                    phase2 = execSeconds;
+                }
+
+                tvResultDisplay.setText(helper.encodeTime(totalSeconds)+"["+helper.encodeTime(phase2)+"]");
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+                //do no stuff
+            }
+        });
+        builder.create();
+        builder.show();
+
+    }
+
     @Override
     public void onResume() {
-        super.onResume();//todo is this registerreceiver supposed to be here?
-        getActivity().registerReceiver(receiver, new IntentFilter("com.example.mbldApp"));
+        super.onResume();
+        //this is called whenever you swipe from adjacent tabs or maximize the app
     }
 }

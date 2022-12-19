@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvTimeMemo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginRight="105dp"
+        android:text="Memo Time" />
+
+    <TextView
+        android:id="@+id/tvTimeExec"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@+id/tvTimeMemo"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Exec Time" />
+
+    <EditText
+        android:id="@+id/edtExecTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_toRightOf="@id/edtMemoTime"
+        android:layout_below="@+id/tvTimeExec"
+        android:inputType="time"
+        android:hint="Exec Time" />
+
+    <EditText
+        android:id="@+id/edtMemoTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@id/tvTimeMemo"
+        android:inputType="time"
+        android:hint="Memo Time" />
+
+    <TextView
+        android:id="@+id/tvAttempted"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/edtMemoTime"
+        android:textSize="20dp"
+        android:layout_marginRight="55dp"
+        android:layout_height="wrap_content"
+        android:text="Cubes Attempted" />
+
+    <EditText
+        android:id="@+id/edtCubesAttempted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@id/tvAttempted"
+        android:inputType="number"
+        android:hint="Cubes Attempted" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/tvSolved"
+        android:layout_toRightOf="@id/tvAttempted"
+        android:layout_below="@id/edtExecTime"
+        android:text="Cubes Solved" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvSolved"
+        android:id="@+id/edtCubesSolved"
+        android:layout_toRightOf="@id/edtCubesAttempted"
+        android:ems="10"
+        android:hint="Cubes Solved"
+         />
+
+</RelativeLayout>
