@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -24,11 +26,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
+import org.worldcubeassociation.tnoodle.*;
+import org.worldcubeassociation.tnoodle.scrambles.Puzzle;
+import org.worldcubeassociation.tnoodle.scrambles.PuzzleRegistry;
 
 import kotlinx.coroutines.flow.SharedFlow;
 
@@ -47,6 +53,11 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     TextView tvTimer;
     TextView tvResultDisplay;
     TextView tvAmountSolved;
+    RecyclerView rvScrambles;
+    ScrambleAdapter adapter;
+    String[] scrambles;
+    ProgressBar progressBar;
+    int scrambleCounter = 0;
     boolean fragmentBackgrounded = false;
     int runPhase = 1; //1 not started/finished/stopped, 2 in memo, 3 in exec
     int phase1, phase2, totalSeconds = 0;
@@ -78,6 +89,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         tvResultDisplay = view.findViewById(R.id.tvResult);
         tvAmountSolved = view.findViewById(R.id.tvSolved);
         edtComment = view.findViewById(R.id.edtComment);
+        rvScrambles = view.findViewById(R.id.rvScrambles);
+        progressBar = view.findViewById(R.id.ProgressBar);
 
         //set onclicklisteners to all buttons so they call the onClick? function that is overriden below
         btnGen.setOnClickListener(this);
@@ -125,17 +138,17 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             Toast.makeText(getContext(), "Not a valid size for an attempt!", Toast.LENGTH_SHORT).show();
             return;
         }
-        //hides components that get my scramble count
         checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 100);
         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 101);
-
+        //start thread
+        scrambles = new String[attempted];
+        Handler scrambleGenHandler = new Handler();
+        scrambleGenHandler.post(scrambleGenRunnable);//go run this runnable
+        //show progressbar and hide components
+        progressBar.setIndeterminate(true);
+        progressBar.setVisibility(View.VISIBLE);
         edtCubeAmount.setVisibility(View.INVISIBLE);
         btnGen.setVisibility(View.INVISIBLE);
-        //show
-        btnStart.setVisibility(View.VISIBLE);
-        tvTimer.setVisibility(View.VISIBLE);
-
-        //TODO:generate and display scrambles
     }
 
     public void onbtnStartClicked() {
@@ -144,6 +157,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             //start running
             runPhase++;//now in memo
             //Use shared preferences
+            tvTimer.setVisibility(View.VISIBLE);
+            rvScrambles.setVisibility(View.INVISIBLE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putLong("time", new Date().getTime());
             editor.putInt("attempted",attempted);
@@ -281,6 +296,28 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             String time = helper.encodeTime(totalSeconds);
             tvTimer.setText(time);
             handler.postDelayed(this, 1000);//calls itself, ie the loop that keeps updating timer is called within itself
+        }
+    };
+
+    private Runnable scrambleGenRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //generate scrambles
+            Puzzle cube = PuzzleRegistry.THREE_NI.getScrambler();
+            if (scrambleCounter < attempted) {
+                scrambles[scrambleCounter] = cube.generateScramble();
+                scrambleCounter++;
+                handler.post(scrambleGenRunnable);
+            } else {
+                adapter = new ScrambleAdapter(scrambles);
+                rvScrambles.setAdapter(adapter);
+                rvScrambles.setLayoutManager(new LinearLayoutManager(getActivity()));
+                rvScrambles.setVisibility(View.VISIBLE);
+                btnStart.setVisibility(View.VISIBLE);
+                handler.removeCallbacks(scrambleGenRunnable);//not sure if necessary
+                //kill ProgressBar
+                progressBar.setVisibility(View.GONE);
+            }
         }
     };
 

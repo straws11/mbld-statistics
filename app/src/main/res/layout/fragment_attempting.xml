@@ -32,12 +32,21 @@
         android:id="@+id/btnStartAttempt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edtCubeAmount"
+        android:layout_below="@+id/rvScrambles"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="Start Attempt"
         android:visibility="invisible"
         tools:visibility="visible" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/rvScrambles"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        />
 
     <TextView
         android:id="@+id/tvTimer"
@@ -119,11 +128,19 @@
     <Button
         android:id="@+id/btnEditResult"
         android:layout_width="wrap_content"
-        android:layout_below="@id/btnStartAttempt"
+        android:layout_below="@id/btnNextAttempt"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:visibility="invisible"
         tools:visibility="visible"
         android:text="Edit Result" />
+
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/ProgressBar"
+        android:layout_centerInParent="true"
+        tools:visibility="visible"
+        android:visibility="gone" />
 
 </RelativeLayout>
