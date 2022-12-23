@@ -30,13 +30,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
-import org.worldcubeassociation.tnoodle.*;
+import java.util.Scanner;
+
 import org.worldcubeassociation.tnoodle.scrambles.Puzzle;
 import org.worldcubeassociation.tnoodle.scrambles.PuzzleRegistry;
 
-import kotlinx.coroutines.flow.SharedFlow;
+
 
 
 public class AttemptingFragment extends Fragment implements View.OnClickListener, LifecycleObserver {
@@ -70,7 +74,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+        //ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -97,35 +101,10 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         btnStart.setOnClickListener(this);
         btnNewAttempt.setOnClickListener(this);
         btnEditResult.setOnClickListener(this);
-
-        //update the timer if there was an attempt ongoing before the app got killed (either by user or Android)
-        //temp
-        //SharedPreferences sharedPreferences = getActivity().getSharedPreferences("timerState",Context.MODE_PRIVATE);
-        //sharedPreferences.edit().clear().commit();
         getSharedPrefInfo();
 
         return view;
     }
-
-    /*@OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    private void onAppBackgrounded() {
-        //show the notify if attempt is active (phase 2 or 3)
-        fragmentBackgrounded = true;
-        if (runPhase != 1) notificationManager.notify(notificationId, timerService.builder.build());
-        //setAlertOnlyOnce();
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    private void onAppForegrounded() {
-        //hide the notify?
-        fragmentBackgrounded = false;
-        try {
-            if (runPhase != 1) notificationManager.cancel(notificationId);//TODO please fix these disgusting hardcoded ids
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //System.out.println("foregrounded!"); runs when app is opened from minimized state
-    }*/
 
     public void onbtnGenScramblesClicked() {
         try {
@@ -222,7 +201,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         //save attempt
         //create mbld object
         String comment = edtComment.getText().toString();
-        MBLDAttempt mbldAttempt = new MBLDAttempt(solved,attempted,phase1,phase2,comment);
+        MBLDAttempt mbldAttempt = new MBLDAttempt(solved,attempted,phase1,phase2,scrambles,comment);
         //Resetting vars
         phase1 = 0;
         phase2 = 0;
@@ -317,6 +296,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                 handler.removeCallbacks(scrambleGenRunnable);//not sure if necessary
                 //kill ProgressBar
                 progressBar.setVisibility(View.GONE);
+                saveScrambles(scrambles);//saves them for later use
+                scrambleCounter = 0;
             }
         }
     };
@@ -330,6 +311,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             totalSeconds = (int) ((new Date().getTime() - sharedPreferences.getLong("time",0))/1000);//returns total time that has elapsed since attempt started
             tvTimer.setText(helper.encodeTime(totalSeconds));
             handler.postDelayed(runnable,1000);
+            scrambles = readScrambles();//get scrambles for this attempt from textfile
 
             //setup components as if in an attempt
             edtCubeAmount.setVisibility(View.INVISIBLE);
@@ -348,6 +330,36 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             }
         }
 
+    }
+
+    private void saveScrambles(String[] scrambles) {
+        //saves scrambles to textfile in the case that app closes to retrieve to save to json later
+        try {
+            FileWriter fileWriter = new FileWriter(getContext().getFilesDir() + "/scrambles.txt");
+            for (int i = 0; i < scrambles.length; i++) {
+                fileWriter.write(scrambles[i]+System.lineSeparator());
+            }
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String[] readScrambles() {
+        String[] scrambles = new String[attempted];
+        try {
+            Scanner myReader = new Scanner(new File(getContext().getFilesDir()+"/scrambles.txt"));
+            int count = 0;
+            while (myReader.hasNextLine()) {
+                String scramble = myReader.nextLine();
+                scrambles[count] = scramble;
+                count++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return scrambles;
     }
 
     public void showEditResultDialog(Context context) {
@@ -421,11 +433,5 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         builder.create();
         builder.show();
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //this is called whenever you swipe from adjacent tabs or maximize the app
     }
 }

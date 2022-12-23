@@ -259,10 +259,14 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onResume() {
         super.onResume();
-        attempts = new MyHelpers().readAttempts(getActivity());
-        Collections.reverse(attempts);
-        ArrayList<MBLDAttempt> filteredAttempts = extractData(attempts);
-        plotLineChart(filteredAttempts);
+        try {
+            attempts = new MyHelpers().readAttempts(getActivity());
+            Collections.reverse(attempts);
+            ArrayList<MBLDAttempt> filteredAttempts = extractData(attempts);
+            plotLineChart(filteredAttempts);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -16,16 +17,18 @@ public class MBLDAttempt implements Serializable {//implements because it allows
     private int phase2Time;
     private String dateTime;
     private String comment;
-    //private ArrayList<String> scrambles = new ArrayList<>();
+    private ArrayList<String> scrambles = new ArrayList<>();
 
     //constructor
-    MBLDAttempt(int solved, int attempted, int phase1Time, int phase2Time, String comment) {//for attempts with multiphase
+    MBLDAttempt(int solved, int attempted, int phase1Time, int phase2Time, String[] scrambles, String comment) {//for attempts with multiphase
         this.solved = solved;
         this.attempted = attempted;
         this.phase1Time = phase1Time;
         this.phase2Time = phase2Time;
         this.dateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
         this.comment = comment;
+        //add all elements of the scramble array to the ArrayList of scrambles (essentially converts String[] to ArrList
+        this.scrambles.addAll(Arrays.asList(scrambles));
     }
 
     public String getResult() {
@@ -46,6 +49,10 @@ public class MBLDAttempt implements Serializable {//implements because it allows
 
     public String getDateTime() {
         return this.dateTime;
+    }
+
+    public ArrayList<String> getScrambles() {
+        return this.scrambles;
     }
 
     public long getDateDuration() {

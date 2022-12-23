@@ -42,7 +42,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/rvScrambles"
         android:visibility="invisible"
         tools:visibility="visible"
