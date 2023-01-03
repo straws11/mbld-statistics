@@ -10,8 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 public class ScrambleAdapter extends
         RecyclerView.Adapter<ScrambleAdapter.ViewHolder> {
 
@@ -50,7 +48,7 @@ public class ScrambleAdapter extends
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            scrambleTextView = (TextView) itemView.findViewById(R.id.tvScrambleItem);
+            scrambleTextView = (TextView) itemView.findViewById(R.id.tvInfoScrambleItem);
             itemScramble = (LinearLayout) itemView.findViewById(R.id.ItemScramble);
         }
     }

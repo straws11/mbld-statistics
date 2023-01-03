@@ -2,9 +2,13 @@ package com.example.mbldapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class AttemptInfo extends AppCompatActivity {
@@ -12,6 +16,8 @@ public class AttemptInfo extends AppCompatActivity {
     //all components
     TextView tvInfoResult, tvInfoStats, tvInfoComment, tvInfoPerformance;
     MyHelpers helper = new MyHelpers();
+    ScrambleAdapter adapter;
+    RecyclerView rvScrambles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,5 +53,10 @@ public class AttemptInfo extends AppCompatActivity {
         if (percentage == -1) tvInfoPerformance.setText("This is your only attempt of this size.");
         else tvInfoPerformance.setText(String.format("This attempt performed better than %2d%% of attempts of this size.",percentage));
 
+        //adapter for scrambles
+        rvScrambles = findViewById(R.id.rvInfoScrambles);
+        adapter = new ScrambleAdapter(mbldAttempt.getScrambles().toArray(new String[0]));
+        rvScrambles.setAdapter(adapter);
+        rvScrambles.setLayoutManager(new LinearLayoutManager(this));
     }
 }

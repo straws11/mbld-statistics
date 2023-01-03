@@ -16,7 +16,7 @@
         android:layout_gravity="center_vertical">
 
         <TextView
-            android:id="@+id/tvScrambleItem"
+            android:id="@+id/tvInfoScrambleItem"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
