@@ -118,10 +118,10 @@
         android:id="@+id/edtComment"
         android:layout_width="230dp"
         android:layout_height="60dp"
-        android:ems="10"
         android:layout_centerInParent="true"
-        android:inputType="text"
+        android:ems="10"
         android:hint="Comment on your attempt"
+        android:inputType="text"
         android:visibility="invisible"
         tools:visibility="visible" />
 

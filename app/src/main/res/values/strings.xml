@@ -9,4 +9,5 @@
         <item>Exec/cube</item>
         <item>Points</item>
     </string-array>
+    <string name="made_by">Made by <a href="www.worldcubeassociation.org/persons/2017SWAR03">Dylan Swarts</a></string>
 </resources>

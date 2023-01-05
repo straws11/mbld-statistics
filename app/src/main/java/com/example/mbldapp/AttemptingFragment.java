@@ -378,12 +378,14 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         if (solved!=0) edtDialogSolved.setText(Integer.toString(solved));
         edtDialogMemo.setText(helper.encodeTime(phase1));
         edtDialogExec.setText(helper.encodeTime(phase2));
+        edtDialogSolved.setText(edtAmountSolved.getText().toString());
 
         //the buttons are somehow automatically appending to the layout on the bottom, along with their onclick listeners
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
+                boolean validEntry = true;
                 //do yes stuff
 
                 String dialogAttVal = edtDialogAttempted.getText().toString();
@@ -398,26 +400,46 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
 
                 if (!dialogMemoVal.equals("")) {
                     int memoSeconds;
-                    String[] split = dialogMemoVal.split(":");
-                    if (split.length == 3) {
-                        memoSeconds = Integer.parseInt(split[0])*3600 + Integer.parseInt(split[1])*60 + Integer.parseInt(split[2]);
-                    } else if (split.length == 2) {
-                        memoSeconds = Integer.parseInt(split[0])*60 + Integer.parseInt(split[1]);
-                    } else memoSeconds = Integer.parseInt(dialogMemoVal);
+                    for (int j = 0; j < dialogMemoVal.length(); j++) {
+                        if ( ! ((dialogMemoVal.charAt(j) >= '0' && dialogMemoVal.charAt(j) <= '9') || dialogMemoVal.charAt(j) == ':') ) {
+                            //if invalid char
+                            Toast.makeText(context, "Invalid value entered!", Toast.LENGTH_SHORT).show();
+                            validEntry = false;
+                            break;
+                        }
+                    }
+                    if (validEntry) {
+                        String[] split = dialogMemoVal.split(":");
+                        if (split.length == 3) {
+                            memoSeconds = Integer.parseInt(split[0]) * 3600 + Integer.parseInt(split[1]) * 60 + Integer.parseInt(split[2]);
+                        } else if (split.length == 2) {
+                            memoSeconds = Integer.parseInt(split[0]) * 60 + Integer.parseInt(split[1]);
+                        } else memoSeconds = Integer.parseInt(dialogMemoVal);
 
-                    phase1 = memoSeconds;
+                        phase1 = memoSeconds;
+                    }
                 }
 
                 if (!dialogExecVal.equals("")) {
                     int execSeconds;
-                    String[] split = dialogExecVal.split(":");
-                    if (split.length == 3) {
-                        execSeconds = Integer.parseInt(split[0])*3600 + Integer.parseInt(split[1])*60 + Integer.parseInt(split[2]);
-                    } else if (split.length == 2) {
-                        execSeconds = Integer.parseInt(split[0])*60 + Integer.parseInt(split[1]);
-                    } else execSeconds = Integer.parseInt(dialogExecVal);
+                    for (int j = 0; j < dialogExecVal.length(); j++) {
+                        if ( ! ((dialogExecVal.charAt(j) >= '0' && dialogExecVal.charAt(j) <= '9') || dialogMemoVal.charAt(j) == ':') ) {
+                            //if invalid char
+                            Toast.makeText(context, "Invalid value entered!", Toast.LENGTH_SHORT).show();
+                            validEntry = false;
+                            break;
+                        }
+                    }
+                    if (validEntry) {
+                        String[] split = dialogExecVal.split(":");
+                        if (split.length == 3) {
+                            execSeconds = Integer.parseInt(split[0]) * 3600 + Integer.parseInt(split[1]) * 60 + Integer.parseInt(split[2]);
+                        } else if (split.length == 2) {
+                            execSeconds = Integer.parseInt(split[0]) * 60 + Integer.parseInt(split[1]);
+                        } else execSeconds = Integer.parseInt(dialogExecVal);
 
-                    phase2 = execSeconds;
+                        phase2 = execSeconds;
+                    }
                 }
                 totalSeconds = phase1+phase2;
                 tvResultDisplay.setText(helper.encodeTime(totalSeconds)+"["+helper.encodeTime(phase1)+"]");

@@ -32,20 +32,28 @@
         android:id="@+id/btnTODO"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onbtnTODOClicked"
-        android:text="About"
+        android:layout_below="@+id/btnEnterApp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/btnEnterApp" />
+        android:onClick="onbtnTODOClicked"
+        android:visibility="gone"
+        android:text="About" />
 
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="215dp"
         android:layout_height="205dp"
-        app:srcCompat="@drawable/androidapplogo"
         android:layout_above="@id/btnEnterApp"
         android:layout_centerHorizontal="true"
         app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/androidapplogo"
         tools:layout_editor_absoluteX="98dp"
         tools:layout_editor_absoluteY="173dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btnEnterApp"
+        android:text="@string/made_by" />
 
 </RelativeLayout>
