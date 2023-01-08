@@ -23,6 +23,7 @@ public class HomePage extends AppCompatActivity {
         setContentView(R.layout.activity_homepage);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle("Home");
+        myToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(myToolbar);
         //android docs said to init the notify channel when app starts \o/
         createNotificationChannel();

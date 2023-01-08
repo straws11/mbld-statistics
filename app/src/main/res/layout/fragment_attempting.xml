@@ -143,4 +143,15 @@
         tools:visibility="visible"
         android:visibility="gone" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvAttemptingPhase"
+        android:text="Phase"
+        android:layout_above="@id/tvTimer"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:textSize="30dp"
+        />
+
 </RelativeLayout>

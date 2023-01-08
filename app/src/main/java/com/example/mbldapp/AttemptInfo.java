@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.widget.LinearLayout;
@@ -25,6 +26,7 @@ public class AttemptInfo extends AppCompatActivity {
         setContentView(R.layout.activity_attempt_info);
         //toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar_info);
+        myToolbar.setTitleTextColor(Color.WHITE);
         myToolbar.setTitle("Attempt Information");//TODO:add id of attempt or something
         setSupportActionBar(myToolbar);
 

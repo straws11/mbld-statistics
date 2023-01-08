@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class MainApp extends AppCompatActivity {
         //toolbar setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar_main);
         myToolbar.setTitle("Multiblind Statistics");
+        myToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(myToolbar);
 
         viewPager = findViewById(R.id.viewpager);

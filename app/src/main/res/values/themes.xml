@@ -1,17 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MBLDApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
+    <style name="Theme.MBLDApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color.
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
+        Secondary brand color.
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        Status bar color.
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
-        <item name="colorSurface">@color/cardview_light_background</item>
+        <item name="colorSurface">@color/white</item>
+
+        <item name="colorPrimary">@color/obsidian_purple</item>
+        <item name="colorPrimaryVariant">@color/obsidian_purple_dark</item>
+        <item name="colorOnPrimary">@color/obsidian_white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/obsidian_purple</item>
+        <item name="colorSecondaryVariant">@color/obsidian_purple_dark</item>
+        <item name="colorOnSecondary">@color/obsidian_white</item>
+        <!-- Status bar color, the one where the time and battery shows -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/obsidian_black</item>
+        <!--background and text-->
+        <item name="android:colorBackground">@color/obsidian_black</item>
+        <item name="android:textColorPrimary">@color/obsidian_light_gray</item>
+        <item name="android:textColorSecondary">@color/obsidian_light_gray</item>
+        <item name="android:textColorTertiary">@color/obsidian_light_gray</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--Dialogs-->
+        <item name="colorBackgroundFloating">@color/obsidian_black</item>
+
     </style>
 </resources>

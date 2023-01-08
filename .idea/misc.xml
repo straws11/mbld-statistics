@@ -12,14 +12,16 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3675" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/activity_attempt_info.xml" value="0.31521739130434784" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/activity_attempting.xml" value="0.18802083333333333" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/activity_homepage.xml" value="0.31521739130434784" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/activity_homepage.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/activity_main.xml" value="0.31521739130434784" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/activity_main_app.xml" value="0.33" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/activity_main_app.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/activity_statistics.xml" value="0.31521739130434784" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/dialog_cube_range.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/dialog_edit_result.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/dialog_item_attempt.xml" value="0.31521739130434784" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/dialog_item_attempt.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/fragment_attempt_list.xml" value="0.31521739130434784" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/fragment_attempting.xml" value="0.25" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/fragment_graph.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/fragment_history.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/fragment_statistics.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/multiblind-statistics/app/src/main/res/layout/info_item_scramble.xml" value="0.1" />

@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- my new colors-->
+    <color name="obsidian_purple">#7d5bed</color>
+    <color name="obsidian_purple_dark">#4136a1</color>
+    <color name="obsidian_black">#1e1e1e</color>
+    <color name="obsidian_dark_black">#181818</color>
+    <color name="obsidian_light_gray">#8d8d8d</color>
+    <color name="obsidian_white">#f8f8f8</color>
 </resources>

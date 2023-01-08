@@ -94,8 +94,9 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
             lineChart.setScaleEnabled(false);
             lineChart.setPinchZoom(false);
             //lineChart.getLegend().setEnabled(false);
-            lineChart.getDescription().setPosition(800f,2050f);//TODO fix!
-            lineChart.getDescription().setText("Graph of points for each attempt");
+            //lineChart.getDescription().setPosition(800f,2050f);//TODO fix!
+            //lineChart.getDescription().setText("Graph of points for each attempt");
+
 
             Collections.reverse(attempts);//readAttempts reverses it for nice display but I need it to be ascending for graph to work
             plotLineChart(attempts);

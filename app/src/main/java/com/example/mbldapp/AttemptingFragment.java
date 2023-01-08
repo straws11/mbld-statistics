@@ -57,6 +57,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     TextView tvTimer;
     TextView tvResultDisplay;
     TextView tvAmountSolved;
+    TextView tvAttemptingPhase;
     RecyclerView rvScrambles;
     ScrambleAdapter adapter;
     String[] scrambles;
@@ -92,6 +93,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         tvTimer = view.findViewById(R.id.tvTimer);
         tvResultDisplay = view.findViewById(R.id.tvResult);
         tvAmountSolved = view.findViewById(R.id.tvSolved);
+        tvAttemptingPhase = view.findViewById(R.id.tvAttemptingPhase);
         edtComment = view.findViewById(R.id.edtComment);
         rvScrambles = view.findViewById(R.id.rvScrambles);
         progressBar = view.findViewById(R.id.ProgressBar);
@@ -148,6 +150,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
 
             handler.postDelayed(runnable,1000);//starts the worker? thread, it will loop within itself now. NOW IN TimerBackgroundService.java
             btnStart.setText("Split");
+            tvAttemptingPhase.setVisibility(View.VISIBLE);
+            tvAttemptingPhase.setText("Memorizing...");
 
         } else if (runPhase==2) {//in memo, now go into exec
             runPhase++;
@@ -155,6 +159,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             phase1 = totalSeconds;//get current time as memo time
             sharedPreferences.edit().putInt("runPhase",runPhase).apply();
             sharedPreferences.edit().putInt("phase1",phase1).apply();
+            tvAttemptingPhase.setText("Solving...");
 
         } else {//in exec aka runPhase = 3, now stop
             handler.removeCallbacks(runnable);//stops the infinite runnable loop
@@ -171,6 +176,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             edtAmountSolved.setText(null);
             btnEditResult.setVisibility(View.VISIBLE);
             tvAmountSolved.setVisibility(View.VISIBLE);
+            tvAttemptingPhase.setVisibility(View.INVISIBLE);
             tvResultDisplay.setText(helper.encodeTime(totalSeconds)+"["+helper.encodeTime(phase1)+"]");
         }
     }

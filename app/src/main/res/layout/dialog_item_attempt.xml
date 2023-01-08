@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layDialog"
     android:layout_width="match_parent"
+    android:background="@color/obsidian_black"
     android:layout_height="match_parent">
 
     <TextView
@@ -68,5 +69,6 @@
         android:layout_marginStart="50dp"
         android:text="NULL"
         app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="@+id/btnDialogDelete" />
 </androidx.constraintlayout.widget.ConstraintLayout>

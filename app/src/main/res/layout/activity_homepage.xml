@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:id="@+id/my_toolbar"
-        android:background="@color/cardview_dark_background"
+        android:background="@color/obsidian_purple"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:theme="@style/Theme.MBLDApp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -53,7 +53,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/btnEnterApp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
         android:text="@string/made_by" />
 
 </RelativeLayout>
