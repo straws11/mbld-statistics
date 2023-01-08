@@ -56,7 +56,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
     Button btnNewAttempt;
     TextView tvTimer;
     TextView tvResultDisplay;
-    TextView tvAmountSolved;
     TextView tvAttemptingPhase;
     RecyclerView rvScrambles;
     ScrambleAdapter adapter;
@@ -92,7 +91,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         btnNewAttempt = view.findViewById(R.id.btnNextAttempt);
         tvTimer = view.findViewById(R.id.tvTimer);
         tvResultDisplay = view.findViewById(R.id.tvResult);
-        tvAmountSolved = view.findViewById(R.id.tvSolved);
         tvAttemptingPhase = view.findViewById(R.id.tvAttemptingPhase);
         edtComment = view.findViewById(R.id.edtComment);
         rvScrambles = view.findViewById(R.id.rvScrambles);
@@ -175,7 +173,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             edtAmountSolved.setVisibility(View.VISIBLE);
             edtAmountSolved.setText(null);
             btnEditResult.setVisibility(View.VISIBLE);
-            tvAmountSolved.setVisibility(View.VISIBLE);
             tvAttemptingPhase.setVisibility(View.INVISIBLE);
             tvResultDisplay.setText(helper.encodeTime(totalSeconds)+"["+helper.encodeTime(phase1)+"]");
         }
@@ -196,7 +193,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
         //hide
         btnNewAttempt.setVisibility(View.INVISIBLE);
         edtAmountSolved.setVisibility(View.INVISIBLE);
-        tvAmountSolved.setVisibility(View.INVISIBLE);
         edtComment.setVisibility(View.INVISIBLE);
         tvResultDisplay.setVisibility(View.INVISIBLE);
         btnEditResult.setVisibility(View.INVISIBLE);

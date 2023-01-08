@@ -24,7 +24,7 @@
         <!-- Status bar color, the one where the time and battery shows -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/obsidian_black</item>
         <!--background and text-->
-        <item name="android:colorBackground">@color/obsidian_black</item>
+        <item name="android:colorBackground">@color/obsidian_dark_black</item>
         <item name="android:textColorPrimary">@color/obsidian_light_gray</item>
         <item name="android:textColorSecondary">@color/obsidian_light_gray</item>
         <item name="android:textColorTertiary">@color/obsidian_light_gray</item>

@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/HistFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/HistFragment"
     tools:context=".HistoryFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -26,6 +26,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="168dp"
         android:text="Result"
+        android:textColor="@color/obsidian_white"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tvRecycleDate"
@@ -39,6 +40,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="80dp"
         android:text="Date"
+        android:textColor="@color/obsidian_white"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
