@@ -108,7 +108,7 @@ public class GraphFragment extends Fragment implements AdapterView.OnItemSelecte
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        //setting colors according to app theme (dark/light)
+        //setting colors according to app theme (dark/light)TODO this shouldnt be necessary
         int nightModeFlags =
                 getContext().getResources().getConfiguration().uiMode &
                         Configuration.UI_MODE_NIGHT_MASK;

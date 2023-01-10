@@ -186,8 +186,8 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
             e.printStackTrace();
             solved = -1;
         }
-        if (solved < 0) {
-            Toast.makeText(getContext(), "Please enter the amount you solved!", Toast.LENGTH_SHORT).show();
+        if (solved < 0 || solved > attempted) {
+            Toast.makeText(getContext(), "Please enter a valid number of solved cubes!", Toast.LENGTH_SHORT).show();
             return;
         }
         //hide
@@ -389,7 +389,6 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                 dialogInterface.dismiss();
                 boolean validEntry = true;
                 //do yes stuff
-
                 String dialogAttVal = edtDialogAttempted.getText().toString();
                 String dialogSolvedVal = edtDialogSolved.getText().toString();
                 String dialogMemoVal = edtDialogMemo.getText().toString();
@@ -425,7 +424,7 @@ public class AttemptingFragment extends Fragment implements View.OnClickListener
                 if (!dialogExecVal.equals("")) {
                     int execSeconds;
                     for (int j = 0; j < dialogExecVal.length(); j++) {
-                        if ( ! ((dialogExecVal.charAt(j) >= '0' && dialogExecVal.charAt(j) <= '9') || dialogMemoVal.charAt(j) == ':') ) {
+                        if ( ! ((dialogExecVal.charAt(j) >= '0' && dialogExecVal.charAt(j) <= '9') || dialogExecVal.charAt(j) == ':') ) {
                             //if invalid char
                             Toast.makeText(context, "Invalid value entered!", Toast.LENGTH_SHORT).show();
                             validEntry = false;
