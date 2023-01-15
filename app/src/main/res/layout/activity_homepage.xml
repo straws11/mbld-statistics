@@ -40,12 +40,12 @@
 
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="215dp"
-        android:layout_height="205dp"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
         android:layout_above="@id/btnEnterApp"
         android:layout_centerHorizontal="true"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/androidapplogo"
+        app:srcCompat="@drawable/logo_modified_modified"
         tools:layout_editor_absoluteX="98dp"
         tools:layout_editor_absoluteY="173dp" />
 
