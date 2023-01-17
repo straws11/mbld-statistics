@@ -127,8 +127,8 @@ public class HistoryFragment extends Fragment implements SelectItemListener {
         TextView tvDialogComment = dialog.findViewById(R.id.tvDialogComment);
 
         tvDialogResult.setText(mbldAttempt.getResult() +"\n"+ mbldAttempt.getComplexTime());
-        tvDialogScore.setText("Score: " + Integer.toString(mbldAttempt.getPoints()));
-        tvDialogComment.setText(mbldAttempt.getComment());
+        tvDialogScore.setText("Points: " + Integer.toString(mbldAttempt.getPoints()));
+        tvDialogComment.setText("Comment: "+ mbldAttempt.getComment());
 
         //Toast.makeText(getActivity(), attItem.getResult(), Toast.LENGTH_SHORT).show();
     }

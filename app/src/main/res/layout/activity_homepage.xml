@@ -22,10 +22,10 @@
         android:id="@+id/btnEnterApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
         android:onClick="onbtnEnterApp"
         android:text="Enter App"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/imgLogo"
         />
 
     <Button
@@ -40,17 +40,17 @@
 
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        android:layout_above="@id/btnEnterApp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_centerInParent="true"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_modified_modified"
+        app:srcCompat="@drawable/app_logo"
         tools:layout_editor_absoluteX="98dp"
         tools:layout_editor_absoluteY="173dp" />
 
     <TextView
         android:layout_width="wrap_content"
+        android:id="@+id/made_by_link"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"

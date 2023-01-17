@@ -9,8 +9,8 @@
 
     <TextView
         android:id="@+id/tvDialogResult"
-        android:layout_width="250dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
         android:layout_marginEnd="150dp"
         android:text="TextView"
@@ -41,26 +41,26 @@
 
     <TextView
         android:id="@+id/tvDialogScore"
-        android:layout_width="90dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/tvDialogComment"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDialogResult" />
 
     <TextView
         android:id="@+id/tvDialogComment"
-        android:layout_width="155dp"
-        android:layout_height="133dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="TextView"
         android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDialogResult" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDialogScore" />
 
     <Button
         android:id="@+id/btnDialogEdit"
